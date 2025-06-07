@@ -1,4 +1,4 @@
-import {NavLink } from "react-router"
+import { NavLink } from "react-router"
 import { CiMenuFries } from "react-icons/ci";
 import SplitText from "../animations/SplitText"
 import { useState } from "react"
@@ -17,7 +17,9 @@ export const LandingPage = () => {
 
     return (
 
-        <main>
+        <main className="app-container">
+
+
 
             <header className="headerPage">
 
@@ -44,6 +46,7 @@ export const LandingPage = () => {
                     </div>
 
                 </nav>
+
 
                 {isOpen && <div className="overlay" onClick={closeMenu}></div>}
 

@@ -1,13 +1,16 @@
+
 /* NAVBAR */
 .navbar {
     height: 80px;
     width: 100%;
+    padding: 0 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 
     transition: all .5s;
     animation: nav .7s ease-in-out;
+    z-index: 100;
 }
 
 @keyframes nav {
@@ -28,6 +31,8 @@
     justify-content: space-around;
     align-items: center;
     transition: all .5s;
+    position: relative;
+    z-index: 100;
 
     .navlink {
         position: relative;
@@ -99,6 +104,7 @@
 .cardsimages {
     margin-top: 100px;
     display: flex;
+    justify-content: center;
     margin-bottom: 150px;
 
     .header-image {
@@ -159,6 +165,10 @@
         margin-left: 40px;
     }
 
+    .navbar {
+        padding: 0;
+    }
+
     .hamburguer {
         display: block;
         position: absolute;
@@ -206,28 +216,41 @@
             line-height: 105px;
             margin-bottom: 0px;
             height: 250px;
-            font-size: 100px;
+            font-size: 85px;
             font-weight: 700;
+            padding:  0 100px;
         }
 
         .textheader-2 {
+            text-align: center;
+            display: block;
+            margin: 0 auto;
             color: white;
             font-size: 30px;
             background-image: linear-gradient(90deg, #1ed1a4, #1bb84f);
-            padding: 10px 30px;
+            padding: 10px 0px;
+            width: 300px;
             border-radius: 50px;
         }
     }
 
     .cardsimages {
-        margin-bottom: 50px;
-        gap: 200px;
+        margin-bottom: 20px;
+        gap: 150px;
 
         .header-image {
             width: 300px;
         }
     }
 
+}
+
+@media (max-width: 600px){
+    .textheader{
+        .textheader-1{
+            padding:  0px;
+        }
+    }
 }
 
 
@@ -297,17 +320,22 @@
 
     margin-bottom: 200px;
     display: flex;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     gap: 30px;
-    margin-right: -100px;
 
     .cardAb {
+
         background-color: white;
         box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-        width: 50%;
+        width: 60%;
         padding: 20px;
         border-radius: 20px;
         transition: all .5s;
+        display: block;
+        margin: 0 auto;
 
         &:hover {
             transform: scale(1.05);
@@ -316,11 +344,10 @@
         .infoCardAb {
             display: flex;
             align-items: center;
-            justify-content: space-between;
             margin-bottom: 15px;
 
             .AbImgContainer {
-
+                margin-right: 40px;
                 background-color: white;
                 padding: 10px;
                 box-shadow: inset 2px 2px 9px rgba(0, 0, 0, 0.2);
@@ -343,15 +370,27 @@
         .cardAbDes {
             color: #777777;
         }
-    }
 
-    .card-1,
-    .card-3 {
-        margin-left: -200px;
+
     }
 
     .card-2 {
-        margin-right: -100px;
+        width: 100%;
+        margin-left: -300px;
+    }
+
+}
+
+@media screen AND (max-width: 1400px) {
+    .cardsAbout {
+
+        .cardAb {
+            width: 80%;
+        }
+
+        .card-2 {
+            margin-left: 0;
+        }
     }
 }
 
@@ -366,14 +405,18 @@
         flex-direction: column;
         margin-right: 0;
 
+        .cardAb {
+            width: 60%;
+        }
+
 
         .card-1,
         .card-3 {
-            margin-left: -150px;
+            margin-left: -100px;
         }
 
         .card-2 {
-            margin-right: -180px;
+            margin-right: -100px;
         }
     }
 }
@@ -382,6 +425,8 @@
 @media screen and (max-width: 600px) {
     .about-container {
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .aboutUs {
@@ -405,7 +450,6 @@
         }
 
         .card-2 {
-            width: 100%;
             margin-left: 0px;
             margin-right: 0;
         }
@@ -464,13 +508,39 @@
 
 }
 
+@media screen and (max-width: 800px) {
+    .pay-section {
+        margin-top: -100px;
+        padding: 50px;
+
+        .textpay {
+            font-size: 70px;
+            height: 200px;
+            padding: 0 70px;
+        }
+
+        .card-pay-section {
+
+            flex-direction: column;
+
+            .pay-container {
+                padding: 10px 100px;
+
+                .pay-image {
+                    width: 150px;
+                }
+            }
+        }
+    }
+}
+
 @media screen and (max-width: 600px) {
     .pay-section {
         margin-top: -100px;
         padding: 50px;
 
         .textpay {
-            font-size: 67px;
+            font-size: 70px;
             height: 200px;
         }
 
@@ -571,17 +641,17 @@
     }
 }
 
-.footer{
+.footer {
     padding: 50px;
     height: 250px;
 
-    .footer-btn{
+    .footer-btn {
         border-radius: 50px;
         padding: 10px 50px;
         background-color: #1bb84f;
         transition: all .5s;
 
-        &:hover{
+        &:hover {
             scale: 1.05;
             background-color: #0c7d31;
         }

@@ -11,16 +11,24 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
+    "axios": "^1.9.0",
     "framer-motion": "^12.16.0",
     "gsap": "^3.13.0",
+    "ogl": "^1.0.11",
+    "postprocessing": "^6.37.3",
     "react": "^19.1.0",
     "react-awesome-reveal": "^4.3.1",
     "react-dom": "^19.1.0",
     "react-fast-marquee": "^1.6.5",
+    "react-hook-form": "^7.57.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.2",
+    "react-toastify": "^11.0.5",
     "swiper": "^11.2.8",
-    "tailwindcss": "^4.1.8"
+    "tailwindcss": "^4.1.8",
+    "three": "^0.177.0",
+    "zod": "^3.25.56",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
