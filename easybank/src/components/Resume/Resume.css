@@ -1,0 +1,194 @@
+.resume-panel{
+    width: 450px;
+    height: 300px;
+    background-color: #fff;
+    border-radius: 20px;
+
+    box-shadow: 10pc 10px 10px rgba(0, 0, 0, 0.1);
+    margin-left: 0px;
+    margin-top: -50px;
+}
+
+.resume-title{
+    color: #223046;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-bottom: 1px solid #cdcdcd;
+}
+
+.cards-resume{
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bg-ico{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.cards-1, .cards-2{
+    display: flex;
+    gap: 20px;
+}
+
+.card{
+    padding: 10px;
+    border-radius: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3C3C3C;
+    width: 50%;
+    gap: 5px;
+
+    .icon-card{
+        background-color: #1B1B1B;
+        font-size: 60px;
+        padding: 10px;
+        border-radius: 7px;
+        color: white;
+    }
+
+    .prg{
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .number{
+        padding-right: 20px;
+        font-size: 30px;
+    }
+}
+
+.card-saving{
+    background-color: #5cd75a;
+    border: 2px solid #33de5b;
+    .icon-card{
+        background-color: #25863c; 
+        color: #fff;
+    }
+    .prg-saving{
+        color: #fff;
+    }
+    .number-saving{
+        color: #fff;
+    }
+}
+
+.card-hl{
+    background-color: #d64545;
+    border: 2px solid #cc4545;
+    .icon-card{
+        background-color: #d02d2d; 
+        color: #fff;
+    }
+    .prg-hl{
+        color: #fff;
+    }
+    .number-hl{
+        color: #fff;
+    }
+}
+
+.card-home{
+    background-color: #4343d2;
+    border: 2px solid #4e4ed8;
+    .icon-card{
+        background-color: #454576; 
+        color: #fff;
+    }
+    .prg-home{
+        color: #fff;
+    }
+    .number-home{
+        color: #fff;
+    }
+}
+
+.card-pl{
+    background-color: #9746ba;
+    border: 2px solid #9d3fbc;
+
+    .icon-card{
+        background-color: #5d306d; 
+        color: #fff;
+    }
+    .prg-pl{
+        color: #fff;
+    }
+    .number-pl{
+        color: #fff;
+    }
+}
+
+@media screen and (max-width: 1470px){
+    .resume-panel{
+        width: 100%;
+    }
+
+    .card{
+        .prg{
+            font-size: 16px;
+        }
+    }
+}
+
+@media screen and (max-width: 1370px){
+    .resume-panel{
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 900px){
+
+    .cards-resume{
+        width: 100%;
+        height: 100%;
+        padding: 50px 30px 0;
+        padding-right: 40px;
+    }
+
+    .card{
+        gap: 20px;
+        .icon-card{
+            font-size: 40px;
+        }
+        .number{
+            font-size: 20px;
+        }
+    }
+}
+
+
+@media screen and (max-width: 850px){
+
+    .resume-panel{
+        overflow: hidden;
+    }
+
+    .cards-resume{
+        padding: 20px;
+        padding-bottom: 70px;
+        overflow-y: scroll;
+    }
+
+    .card{
+        width: 100%;
+    }
+
+    .cards-1, .cards-2{
+        width: 100%;
+        flex-direction: column;
+    }
+}
+
+
+@media screen and (max-width: 600px){
+    .resume-panel{
+        width: 100%;
+    }
+}
