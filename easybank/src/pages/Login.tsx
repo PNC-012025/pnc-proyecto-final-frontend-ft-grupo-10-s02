@@ -23,7 +23,7 @@ export const Login = () => {
             await fetchLogin(data)
             toast.success("Inicio de sesión exitoso")
             reset()
-            setTimeout(() => navigate("/home"), 2000)
+            setTimeout(() => navigate("/dashboard"), 2000)
         } catch (error) {
             toast.error("Error al iniciar sesión")
         }

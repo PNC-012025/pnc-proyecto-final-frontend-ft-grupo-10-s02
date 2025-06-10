@@ -8,6 +8,7 @@ type EasyBankStore = {
     isAuthenticated: boolean;
     fetchRegister: (data: RegisterInput) => Promise<void>;
     fetchLogin: (data: LoginInput) => Promise<void>;
+    logout: () => void;
 };
 
 const API_URL = import.meta.env.VITE_API_URL
@@ -30,7 +31,7 @@ export const useEasyBankStore = create<EasyBankStore>((set) => ({
         try {
             const response = await axios.post(`${API_URL}/auth/login`, data);
             console.log("Inicio de sesión exitoso.", response.data);
-            const token = response.data.token;
+            const token = response.data.data.token;
             set({
                 token,
                 isAuthenticated: true,
