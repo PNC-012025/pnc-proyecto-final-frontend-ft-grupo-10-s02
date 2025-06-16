@@ -11,6 +11,9 @@ import '../styles/Dashboard/Dash_Home.css';
 import { GraphMonth } from './GraphMonth';
 import { ActivateCardPopup } from './ActivateCardPopup';
 import { useCardStore } from '../store/useCardStore';
+import { useTransactionStore } from '../store/useTransactionStore';
+import { TransactionPopup } from './TransactionPopup';
+import { useEasyBankStore } from '../store/userStore';
 
 const currencyRates: { [key: string]: number } = {
     EUR: 0.92,
@@ -25,7 +28,18 @@ export const DashboardHome = () => {
     const [currency, setCurrency] = useState<string>('EUR');
     const [result, setResult] = useState<string>('');
 
-    const { setPopupOpen, cardDetails, isCardActive, fetchCardDetails } = useCardStore();
+    const { setPopupOpen, cardDetails, fetchCardDetails } = useCardStore();
+    const { isCardActive } = useEasyBankStore();
+
+    const { transactions, fetchTransactions, setPopupOpen: setTransactionPopup } = useTransactionStore();
+
+    useEffect(() => {
+        if (isCardActive) {
+            fetchCardDetails();
+            fetchTransactions();
+        }
+    }, [isCardActive, fetchCardDetails, fetchTransactions]);
+
 
     const handleConversion = (e: React.FormEvent) => {
         e.preventDefault();
@@ -61,7 +75,7 @@ export const DashboardHome = () => {
                         <div className='card-debit'>
                             <div className='card-content'>
                                 <div className='accoun-debit'>
-                                    <p className='de-t'>Saldo actual</p>
+                                    <p className='de-t'>Cuenta Easybank</p>
                                     <p className='de-p'>
                                         {cardDetails ? `$${cardDetails.balance.toFixed(2)}` : '$00.00'}
                                     </p>
@@ -70,12 +84,12 @@ export const DashboardHome = () => {
                                 <div className='account-data'>
                                     <p className='da-pa'>
                                         {cardDetails ?
-                                            `**** **** **** ${cardDetails.accountNumber.slice(-4)}` :
-                                            '**** **** **** *088'
+                                            `${cardDetails.accountNumber}` :
+                                            '*************088'
                                         }
                                     </p>
                                     <p className='da-da'>
-                                        {cardDetails ? cardDetails.expiryDate : '09/25'}
+                                        {cardDetails ? `${cardDetails.firstName} - ${cardDetails.lastName}` : 'Cliente'}
                                     </p>
                                 </div>
                             </div>
@@ -86,65 +100,36 @@ export const DashboardHome = () => {
                         <div className='card-history'>
                             <div className='history-text'>
                                 <TbTextWrap className='h-i' />
-                                <p className='h-p'>Transacciones</p>
+                                <p className='h-p'>Últimas 5 Transacciones</p>
                             </div>
 
-                            <div className='history-text'>
-                                <IoIosTrendingUp className='text-white rounded-full bg-green-500 tr' />
-                                <div className='flex justify-between items-center w-full'>
-                                    <div>
-                                        <p className='h-p'>Ahorro</p>
-                                        <p className='text-sm text-gray-400'>12.01.2020 09:34</p>
+                            {transactions
+                                .slice() 
+                                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) 
+                                .slice(0, 5)
+                                .map(tx => (
+                                    <div key={tx.id} className='history-text'>
+                                        {tx.type === "RECEIVER" ? (
+                                            <IoIosTrendingUp className='bg-green-500 text-white rounded-full tr' />
+                                        ) : (
+                                            <IoTrendingDown className='bg-red-500 text-white rounded-full tr' />
+                                        )}
+                                        <div className='flex justify-between items-center w-full'>
+                                            <div>
+                                                <p className='h-p'>{tx.description ?? tx.accountNumber}</p>
+                                                <p className='text-sm text-gray-500'>Cuenta {tx.accountNumber}</p>
+                                                <p className='text-sm text-gray-400'>
+                                                    {new Date(tx.date).toLocaleString()}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <p className={tx.type === "RECEIVER" ? '' : 'text-red-500'}>
+                                                    {tx.type === "RECEIVER" ? `$${tx.amount.toFixed(2)}` : `-$${tx.amount.toFixed(2)}`}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <div>
-                                        <p>$100</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className='history-text'>
-                                <IoTrendingDown className='bg-red-500 text-white rounded-full tr' />
-                                <div className='flex justify-between items-center w-full'>
-                                    <div>
-                                        <p className='h-p'>Comida de la semana</p>
-                                        <p className='text-sm text-gray-400'>12.01.2020 09:34</p>
-                                    </div>
-
-                                    <div>
-                                        <p className='text-red-500'>-$80</p>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div className='history-text'>
-                                <IoIosTrendingUp className='bg-green-500 text-white rounded-full tr' />
-                                <div className='flex justify-between items-center w-full'>
-                                    <div>
-                                        <p className='h-p'>Salario</p>
-                                        <p className='text-sm text-gray-400'>12.01.2020 09:34</p>
-                                    </div>
-                                    <div>
-                                        <p>$800</p>
-
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div className='history-text'>
-                                <IoTrendingDown className='bg-red-500 text-white rounded-full tr' />
-                                <div className='flex justify-between items-center w-full'>
-                                    <div>
-                                        <p className='h-p'>Servicios Básicos</p>
-                                        <p className='text-sm text-gray-400'>12.01.2020 09:34</p>
-                                    </div>
-                                    <div>
-                                        <p className='text-red-500'>-$150</p>
-                                    </div>
-                                </div>
-                            </div>
+                                ))}
                         </div>
                     </Fade>
 
@@ -160,7 +145,15 @@ export const DashboardHome = () => {
                                     maximizar tus ahorros. Al
                                     activar esta tarjeta, Es fácil, rápido y totalmente gratis.
                                 </p>
-                                <button className='home-cta' onClick={() => setPopupOpen(true)}>Actívala</button>
+                                <button
+                                    disabled={isCardActive}
+                                    className={`home-cta px-4 py-2 rounded ${isCardActive ? 'bg-gray-400 text-gray-100 cursor-not-allowed' : 'bg-green-500 text-gray-50'
+                                        }`}
+                                    onClick={() => setPopupOpen(true)}
+                                >
+                                    {isCardActive ? '¡Disfrutala!' : 'Actívala'}
+                                </button>
+
                             </div>
 
                             <div>
@@ -179,22 +172,17 @@ export const DashboardHome = () => {
                                     <p className='tr-p'>Transferencia</p>
                                 </div>
 
-                                <form className='tr-form'>
-                                    <input
-                                        className='tr-in'
-                                        type="number"
-                                        max={20}
-                                        placeholder='5345 0879 1254 0382 9238'
-                                    />
-                                    <input
-                                        className='tr-sub'
-                                        type="submit"
-                                    />
-                                </form>
+                                <button
+                                    className='tr-sub'
+                                    onClick={() => setTransactionPopup(true)}
+                                >
+                                    Nueva transferencia
+                                </button>
 
                                 <p className='visa'>Visa o MasterCard para cualquier banco</p>
                             </div>
                         </Fade>
+                        <TransactionPopup />
 
                         <Fade direction='up' triggerOnce={true} delay={100}>
                             <div className='home-tr'>

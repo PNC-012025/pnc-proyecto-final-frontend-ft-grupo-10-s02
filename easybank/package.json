@@ -17,6 +17,7 @@
     "chart.js": "^4.4.9",
     "framer-motion": "^12.16.0",
     "gsap": "^3.13.0",
+    "nanoid": "^5.1.5",
     "ogl": "^1.0.11",
     "postprocessing": "^6.37.3",
     "react": "^18.3.1",

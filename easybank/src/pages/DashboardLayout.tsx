@@ -20,7 +20,7 @@ export const DashboardLayout = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen lateral-dash">
       <Fade direction="left" className="w-25 h-ful p-4 flex flex-col justify-between">
         <aside className="lateral">
           <ul className="space-y-4">
