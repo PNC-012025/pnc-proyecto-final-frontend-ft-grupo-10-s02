@@ -6,10 +6,12 @@ import { useExpense } from '../../hooks/useExpense'
 import { notifyError, notifyErrorAmount, notifySucces, notifySuccesEdit } from '../../extras/notify'
 
 import './ExpenseForm.css'
+import { useCardStore } from '../../store/useCardStore'
+import { useExpenseStore } from '../../store/useExpenseStore'
 
 export const ExpenseForm = () => {
 
-    const { state, dispatch, spentTotalMoney } = useExpense();
+    const { state } = useExpense();
 
     const initialExpense = {
         expenseName: '',
@@ -17,8 +19,6 @@ export const ExpenseForm = () => {
         category: '',
         date: ''
     }
-
-    const[previewAmount, setPreviewAmount] = useState(0.0);
 
     const expensetMoney = useMemo(() => {
         return state.expenses.reduce((total, item) => total + item.amount, 0);
@@ -36,43 +36,38 @@ export const ExpenseForm = () => {
         })
     }
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const { addExpense, updateExpense } = useExpenseStore();
+    
+
+   const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (Object.values(expense).includes('')) {
             notifyError();
-            return
+            return;
         }
 
-        if ((expense.amount - previewAmount) > spentTotalMoney || expense.amount <= 0) {
+        if (expense.amount <= 0) {
             notifyErrorAmount();
             return;
         }
 
-
-        if (state.editingId) {
-
-            const transformExpenseEdit = {
-                ...expense,
-                id: state.editingId
-            }
-
-            notifySuccesEdit();
-            dispatch({type: 'edit-expense', payload: {expense: transformExpenseEdit}})
-
-        } else {
-            notifySucces();
-            const transformExpense = {
-                ...expense,
-                id: Date.now().toString()
-            }
-
-            dispatch({ type: 'add-expense', payload: { expense: transformExpense } })
+        if (expense.amount > balance) {
+            notifyErrorAmount();
+            return;
         }
 
-        setPreviewAmount(0.0);
+        if (state.editingId) {
+            notifySuccesEdit();
+            await updateExpense(state.editingId, expense);
+        } else {
+            notifySucces();
+            await addExpense(expense);
+        }
+
         setExpense(initialExpense);
-    }
+    };
+
 
     useEffect(() => {
         if (state.editingId) {
@@ -81,14 +76,17 @@ export const ExpenseForm = () => {
             })[0];
 
             setExpense(editItemExpense);
-            setPreviewAmount(editItemExpense.amount);
         }
 
     }, [state.editingId])
 
+
+    const { cardDetails } = useCardStore();
+    const balance = cardDetails?.balance ?? 0;
+
     return (
         <div className='form-panel'>
-            <p className='form-title'>Nuevo gasto</p>
+            <p className='form-title'>Nueva reserva</p>
 
             <form
                 className='form-expense'
@@ -162,8 +160,8 @@ export const ExpenseForm = () => {
                 <input
                     type="submit"
                     className='form-expense-submit disabled:opacity-20'
-                    value={'Agrega un nuevo gasto'}
-                    disabled={expensetMoney >= state.budget ? true : false}
+                    value={'Agrega reserva'}
+                    disabled={(balance-expensetMoney) <= 0}
                 />
             </form>
         </div>

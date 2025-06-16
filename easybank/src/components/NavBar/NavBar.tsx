@@ -1,109 +1,85 @@
-import { Fade } from 'react-awesome-reveal'
+import { Fade } from 'react-awesome-reveal';
 import { MdAttachMoney, MdMoneyOff } from "react-icons/md";
 
-import { useExpense } from '../../hooks/useExpense'
 import { IoCloseOutline } from "react-icons/io5";
 
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
-import './NavBar.css'
-import { formatCurrency } from '../../helpers';
+import './NavBar.css';
+import { formatCurrency } from'../../helpers';
+import { useCardStore } from "../../store/useCardStore";
 
+import { useExpenseStore } from "../../store/useExpenseStore";
 
 type NavBarProps = {
-    showMenu: boolean
-    setShowMenu: React.Dispatch<React.SetStateAction<boolean>>
+    showMenu: boolean;
+    setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const NavBar = ({ showMenu, setShowMenu }: NavBarProps) => {
 
-    const {dispatch, budgetMoney, spentTotalMoney, expensetMoney } = useExpense();
+    const { expenses } = useExpenseStore();
 
-    const handleReset = () => {
-        localStorage.removeItem('budgetInitial')
-        dispatch({ type: 'reset-app' });
-    }
+    const expensetMoney = expenses.reduce((total, item) => total + item.amount, 0);
 
-    const handleCloseMenu = () => {
-        setShowMenu(false);
-    }
+    const { cardDetails } = useCardStore();
+    const balance = cardDetails?.balance ?? 0;
 
-    const percentage = ((spentTotalMoney / budgetMoney) * 100).toFixed(1);
+    const percentage = balance > 0 ? (expensetMoney / balance) * 100 : 0;
 
-    const pathColorBar = (percentage: number) => {
-        if (percentage <= 30) {
-            return '#f63b3b'
-        }
-        if (percentage <= 50) {
-            return '#f2e71a'
-        }
-        if (percentage > 50) {
-            return '#08CD42';
-        }
-    }
-    
+    let color = '#4caf50';
+    if (percentage >= 50 && percentage < 100) color = '#deb82c';
+    if (percentage === 100) color = '#f44336';
+
     return (
-        <Fade triggerOnce={true} direction='left' duration={1000}>
+        <Fade triggerOnce direction='left' duration={1000}>
             <nav className={`nav ${showMenu ? 'show-menu' : 'close-menu'}`}>
 
                 <IoCloseOutline
                     className='close-icon'
-                    onClick={handleCloseMenu}
+                    onClick={() => setShowMenu(false)}
                 />
 
                 <div>
                     <figure className='graf-cont'>
                         <CircularProgressbar
                             value={+percentage}
-                            text={`${percentage}%`}
-
-                            styles={buildStyles({
-                                trailColor: '#2b2b2b',
-                                pathColor: `${pathColorBar(+percentage)}`,
-                                textColor: `${pathColorBar(+percentage)}`
+                            text={`${percentage.toFixed(0)}%`}
+                            styles={buildStyles({ 
+                                trailColor: '#b3aeae',
+                                pathColor: color,
+                                textColor: color,
                             })}
-
                             className='progress-bar'
-                        />;
+                        />
                     </figure>
 
                     <div className='money-div'>
                         <div className='money-cont'>
                             <MdAttachMoney className='ico ico-dis' />
-                            <p className='mon-p'>Presupuesto: {''}
-                                <span className='amount'>{formatCurrency(budgetMoney)}</span>
-                            </p>
-                        </div>
-
-                        <div className='money-cont'>
-                            <MdAttachMoney className='ico ico-ava' />
-                            <p className='mon-p'>Disponible: {''}
-                                <span className='amount'>{formatCurrency(spentTotalMoney)}</span>
+                            <p className='mon-p'>Tarjeta:{' '}
+                                <span className='amount font-bold'>{formatCurrency(balance)}</span>
                             </p>
                         </div>
 
                         <div className='money-cont'>
                             <MdMoneyOff className='ico ico-spent' />
-                            <p className='mon-p'>Gastado: {''}
-                                <span className='amount'>{formatCurrency(expensetMoney)}</span>
+                            <p className='mon-p'>Gastado:{' '}
+                                <span className='amount font-bold'>{formatCurrency(expensetMoney)}</span>
+                            </p>
+                        </div>
+
+                        <div className='money-cont'>
+                            <MdAttachMoney className='ico ico-ava' />
+                            <p className='mon-p'>Disponible:{' '}
+                                <span className='amount font-bold'>{formatCurrency(balance - expensetMoney)}</span>
                             </p>
                         </div>
                     </div>
                 </div>
-
-                <div>
-                    <button
-                        className='reset-btn'
-                        onClick={handleReset}
-                    >
-                        Reiniciar presupuesto
-                    </button>
-                </div>
             </nav>
-
-
-
         </Fade>
     )
 }
+

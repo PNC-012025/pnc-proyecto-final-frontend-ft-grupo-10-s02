@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-export const notifySucces = () => toast.success('Expense added successfully', {
+export const notifySucces = () => toast.success('Gasto agregado correctamente', {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -12,7 +12,7 @@ export const notifySucces = () => toast.success('Expense added successfully', {
     className: 'custom-toast'
 });
 
-export const notifySuccesEdit = () => toast.success('Expense edited successfully', {
+export const notifySuccesEdit = () => toast.success('Gasto editado correctamente', {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -24,7 +24,7 @@ export const notifySuccesEdit = () => toast.success('Expense edited successfully
     className: 'custom-toast'
 });
 
-export const notifyError = () => toast.error('Please complete the form', {
+export const notifyError = () => toast.error('Complete el formulario', {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -36,7 +36,7 @@ export const notifyError = () => toast.error('Please complete the form', {
     className: 'custom-toast'
 });
 
-export const notifyErrorAmount = () => toast.error('Ivalid Amount', {
+export const notifyErrorAmount = () => toast.error('Cantidad inválida', {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,

@@ -36,7 +36,7 @@
 }
 
 .card{
-    padding: 10px;
+    padding: 0px;
     border-radius: 7px;
     display: flex;
     justify-content: space-between;
@@ -65,10 +65,10 @@
 }
 
 .card-saving{
-    background-color: #5cd75a;
-    border: 2px solid #33de5b;
+    background-color: #131a39;
+    border: 2px solid #131a39;
     .icon-card{
-        background-color: #25863c; 
+        background-color: #131a39; 
         color: #fff;
     }
     .prg-saving{
@@ -80,10 +80,10 @@
 }
 
 .card-hl{
-    background-color: #d64545;
-    border: 2px solid #cc4545;
+    background-color: #131a39;
+    border: 2px solid #131a39;
     .icon-card{
-        background-color: #d02d2d; 
+        background-color: #131a39; 
         color: #fff;
     }
     .prg-hl{
@@ -95,10 +95,10 @@
 }
 
 .card-home{
-    background-color: #4343d2;
-    border: 2px solid #4e4ed8;
+    background-color: #131a39;
+    border: 2px solid #131a39;
     .icon-card{
-        background-color: #454576; 
+        background-color: #131a39; 
         color: #fff;
     }
     .prg-home{
@@ -110,11 +110,11 @@
 }
 
 .card-pl{
-    background-color: #9746ba;
-    border: 2px solid #9d3fbc;
+    background-color: #131a39;
+    border: 2px solid #131a39;
 
     .icon-card{
-        background-color: #5d306d; 
+        background-color: #131a39; 
         color: #fff;
     }
     .prg-pl{

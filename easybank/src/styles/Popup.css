@@ -1,0 +1,81 @@
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  width: 500px;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.popup-content input,
+.popup-content textarea {
+  padding: 0.50rem 1rem;
+  border-radius: 50px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  font-family: inherit;
+}
+
+.popup-content textarea {
+  resize: none;
+  height: 60px;
+}
+
+.flex {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.error-msg {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+
+.date-input-readonly {
+  background-color: #e2e8f0;
+  color: #000;
+  cursor: not-allowed;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+.date-input-readonly::-webkit-datetime-edit {
+  color: #000;
+}
+
+.date-input-readonly:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+.tr-b {
+  padding: 7px;
+  border-radius: 50px;
+  transition: all .5s;
+  cursor: pointer;
+
+  &:hover {
+    scale: 1.05;
+  }
+}

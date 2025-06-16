@@ -5,7 +5,6 @@ import { useState } from "react"
 
 import '../styles/Landing/Landingpage.css'
 import { Fade } from "react-awesome-reveal";
-import ScrollFloat from "../animations/ScrollFloat";
 import Marquee from "react-fast-marquee";
 import GradientText from "../animations/GradientText";
 
@@ -38,7 +37,6 @@ export const LandingPage = () => {
                         <a href="" className="navlink">Inicio</a>
                         <a href="#about" className="navlink">Sobre nosotros</a>
                         <a href="#clients" className="navlink">Clientes</a>
-                        <a href="#contact" className="navlink">Contacto</a>
                     </div>
 
                     <div className="navactions">
@@ -93,16 +91,19 @@ export const LandingPage = () => {
 
             <section className="aboutUs" id="about">
 
-                <ScrollFloat
-                    animationDuration={1}
-                    ease='back.inOut(2)'
-                    scrollStart='center bottom+=50%'
-                    scrollEnd='bottom bottom-=40%'
-                    stagger={0.03}
-                    textClassName="aboutTitle"
-                >
-                    Sobre Nosotros
-                </ScrollFloat>
+                <SplitText
+                    text="Sobre Nosotros"
+                    className="text-2xl font-semibold text-center aboutTitle"
+                    delay={100}
+                    duration={0.6}
+                    ease="power3.out"
+                    splitType="chars"
+                    from={{ opacity: 0, y: 40 }}
+                    to={{ opacity: 1, y: 0 }}
+                    threshold={0.1}
+                    rootMargin="-100px"
+                    textAlign="center"
+                />
 
 
                 <div className="about-container">
@@ -342,23 +343,6 @@ export const LandingPage = () => {
                     </div>
                 </Marquee>
             </section>
-
-            <footer className="bg-gray-900 text-white py-12 px-4 footer" id="contact">
-                <div className="max-w-4xl mx-auto text-center space-y-8 flex flex-col gap-6 footer-content">
-
-                    <h2 className="text-3xl font-semibold">Easy Bank</h2>
-
-                    <NavLink to={"/login"} className={"footer-btn"}>
-                        Empieza ya
-                    </NavLink>
-
-                    <p className="text-sm text-gray-400 mt-6">
-                        © {new Date().getFullYear()} Easy Bank. Todos los derechos reservados.
-                    </p>
-
-                </div>
-            </footer>
-
 
         </main>
     )

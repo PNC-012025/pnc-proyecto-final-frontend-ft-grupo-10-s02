@@ -1,4 +1,3 @@
-// App.tsx
 import { Routes, Route } from "react-router";
 import { LandingPage } from "./pages/LandingPage";
 import { Login } from "./pages/Login";
@@ -6,7 +5,6 @@ import { Register } from "./pages/Register";
 import { DashboardLayout } from "./pages/DashboardLayout";
 import { DashboardHome } from "./components/DashboardHome";
 import { ExpDashboard } from "./components/ExpenseDashboard/ExpDashboard";
-
 
 import { ExpenseProvider } from "./context/ExpenseContext";
 import { ToastContainer } from "react-toastify";

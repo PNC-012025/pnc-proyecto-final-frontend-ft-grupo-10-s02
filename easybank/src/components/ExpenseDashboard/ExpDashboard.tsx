@@ -12,7 +12,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './ExpDashboard.css'
 import { ListExpense } from "../ListExpense/ListExpense";
-import ExpenseModal from "../ExpenseModal";
 
 export const ExpDashboard = () => {
 
@@ -61,7 +60,6 @@ export const ExpDashboard = () => {
                     </Fade>
                 </div>
                 
-                <ExpenseModal/>
 
             </div>
         </div>
