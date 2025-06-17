@@ -8,6 +8,7 @@ import { ExpDashboard } from "./components/ExpenseDashboard/ExpDashboard";
 
 import { ExpenseProvider } from "./context/ExpenseContext";
 import { ToastContainer } from "react-toastify";
+import { AdminPage } from "./pages/AdminPage";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="home" element={<DashboardHome />} />
           <Route path="wallet" element={<ExpDashboard />} />
         </Route>
+        <Route path="/admin" element= {<AdminPage/>}></Route>
       </Routes>
 
       <ToastContainer
