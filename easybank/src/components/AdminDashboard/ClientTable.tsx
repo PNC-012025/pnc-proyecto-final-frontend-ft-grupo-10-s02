@@ -1,126 +1,112 @@
 import { useState } from 'react';
+import DataTable from 'react-data-table-component';
+import { TableColumn } from 'react-data-table-component';
 
 interface User {
   _id: string;
-  username: string;
   name: string;
   lastname: string;
+  dui: string;
   email: string;
   rol: string;
-  createdAt: string;
   active: boolean;
 }
 
-interface Props {
-  elementId?: string;
-}
-
-// Datos quemados
 const DUMMY_USERS: User[] = [
   {
     _id: '1',
-    username: 'juanito01',
     name: 'Juan',
     lastname: 'Pérez',
+    dui: '01234567-8',
     email: 'juan@example.com',
     rol: 'cliente',
-    createdAt: '2023-01-10T12:00:00Z',
     active: true,
   },
   {
     _id: '2',
-    username: 'maria88',
     name: 'María',
     lastname: 'González',
+    dui: '12345678-9',
     email: 'maria@example.com',
     rol: 'cliente',
-    createdAt: '2023-02-14T15:30:00Z',
     active: false,
   },
   {
     _id: '3',
-    username: 'carlos_dev',
     name: 'Carlos',
     lastname: 'Ramírez',
+    dui: '23456789-0',
     email: 'carlos@example.com',
     rol: 'cliente',
-    createdAt: '2023-03-20T08:45:00Z',
     active: true,
   },
 ];
 
-const ClientTable = ({ elementId }: Props) => {
-  const [users, setUsers] = useState<User[]>(DUMMY_USERS);
-  const [search, setSearch] = useState('');
+const columns: TableColumn<User>[] = [
+  {
+    name: 'ID',
+    selector: (row: User) => row._id,
+    sortable: true,
+  },
+  {
+    name: 'Nombre',
+    selector: (row: User) => row.name,
+    sortable: true,
+  },
+  {
+    name: 'Apellido',
+    selector: (row: User) => row.lastname,
+    sortable: true,
+  },
+  {
+    name: 'DUI',
+    selector: (row: User) => row.dui,
+  },
+  {
+    name: 'Email',
+    selector: (row: User) => row.email,
+  },
+  {
+    name: 'Rol',
+    selector: (row: User) => row.rol,
+  },
+  {
+    name: 'Estado',
+    cell: (row: User) => (
+      <span className={row.active ? 'text-green-600' : 'text-red-600'}>
+        {row.active ? 'Activo' : 'Inactivo'}
+      </span>
+    ),
+  },
+];
 
-  const handleToggle = (userId: string) => {
-    const updated = users.map(user =>
-      user._id === userId ? { ...user, active: !user.active } : user
-    );
-    setUsers(updated);
-  };
+const ClientTable = () => {
+  const [filterText, setFilterText] = useState('');
 
-  const handleSearch = (term: string) => {
-    setSearch(term);
-  };
-
-  const filtered = users.filter(user =>
-    `${user.name} ${user.lastname}`.toLowerCase().includes(search.toLowerCase())
+  const filteredData = DUMMY_USERS.filter(user =>
+    `${user.name} ${user.lastname}`.toLowerCase().includes(filterText.toLowerCase())
   );
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-4">Clientes</h1>
+    <div className="w-full h-full px-6 py-4">
+      <h1 className="text-2xl font-bold mb-4">Clientes</h1>
 
       <input
         type="text"
         placeholder="Buscar por nombre"
-        value={search}
-        onChange={(e) => handleSearch(e.target.value)}
-        className="mb-4 p-2 border border-gray-300 rounded w-full max-w-md"
+        value={filterText}
+        onChange={e => setFilterText(e.target.value)}
+        className="mb-4 px-3 py-2 border border-gray-300 rounded w-full max-w-md"
       />
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded shadow">
-          <thead className="bg-gray-100 text-left">
-            <tr>
-              <th className="p-3">ID</th>
-              <th className="p-3">Usuario</th>
-              <th className="p-3">Nombre</th>
-              <th className="p-3">Email</th>
-              <th className="p-3">Rol</th>
-              <th className="p-3">Fecha</th>
-              <th className="p-3">Estado</th>
-              <th className="p-3">Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map(user => (
-              <tr key={user._id} className="border-b hover:bg-gray-50">
-                <td className="p-3">{user._id}</td>
-                <td className="p-3">{user.username}</td>
-                <td className="p-3">{user.name} {user.lastname}</td>
-                <td className="p-3">{user.email}</td>
-                <td className="p-3">{user.rol}</td>
-                <td className="p-3">{new Date(user.createdAt).toLocaleDateString()}</td>
-                <td className="p-3">{user.active ? 'Activo' : 'Inactivo'}</td>
-                <td className="p-3">
-                  <button
-                    onClick={() => handleToggle(user._id)}
-                    className={`px-3 py-1 rounded text-sm ${
-                      user.active
-                        ? 'bg-red-500 text-white hover:bg-red-600'
-                        : 'bg-green-500 text-white hover:bg-green-600'
-                    }`}
-                  >
-                    {user.active ? 'Desactivar' : 'Activar'}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        columns={columns}
+        data={filteredData}
+        pagination
+        striped
+        highlightOnHover
+        responsive
+      />
     </div>
   );
 };
