@@ -1,25 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from "react"; // Importar useEffect
 import {
   FaUser,
   FaTable,
   FaMap,
   FaExclamationCircle,
   FaSignOutAlt,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 interface SidebarProps {
   setActiveSection: (section: string) => void;
 }
 
 const menuItems = [
-  { name: 'Usuarios', section: 'usuarios', icon: <FaUser /> },
-  { name: 'Tarjetas', section: 'tarjetas', icon: <FaTable /> },
-  { name: 'Movimientos', section: 'movimientos', icon: <FaMap /> },
-  { name: 'Reportar errores', section: 'notfound', icon: <FaExclamationCircle /> },
+  { name: "Usuarios", section: "usuarios", icon: <FaUser /> },
+  { name: "Tarjetas", section: "tarjetas", icon: <FaTable /> },
+  { name: "Movimientos", section: "movimientos", icon: <FaMap /> },
+  { name: "Dashboard", section: "notfound", icon: <FaExclamationCircle /> },
 ];
 
 const AdminSidebar = ({ setActiveSection }: SidebarProps) => {
-  const [active, setActive] = useState('usuarios');
+  const [active, setActive] = useState("usuarios");
+
+  // Llamar a setActiveSection con "usuarios" al montar el componente
+  useEffect(() => {
+    setActiveSection("usuarios");
+  }, []); // El array vacío asegura que solo se ejecute una vez al montar
 
   const handleClick = (section: string) => {
     setActive(section);
@@ -27,8 +32,8 @@ const AdminSidebar = ({ setActiveSection }: SidebarProps) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.href = '/login';
+    localStorage.removeItem("token");
+    window.location.href = "/login";
   };
 
   return (
@@ -43,30 +48,49 @@ const AdminSidebar = ({ setActiveSection }: SidebarProps) => {
       </div>
 
       {/* Navegación como botones visuales */}
-      <nav className="flex-1 w-full px-4 flex flex-col gap-4">
+      <nav className="flex-1 w-full px-4 py-5 flex flex-col items-center gap-6 justify-self-auto relative">
         {menuItems.map((item) => (
           <button
             key={item.section}
             onClick={() => handleClick(item.section)}
-            className={`flex items-center gap-x-3 px-4 py-3 rounded-lg shadow-sm transition text-sm font-medium border 
-              ${
-                active === item.section
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200 border-transparent'
+            className={`
+        flex items-center justify-center w-full
+        px-6 py-5 min-h-[70px]
+        rounded-xl
+        text-2xl font-medium
+        transition-all duration-200
+        border-2
+        focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
+        relative
+        ${active === item.section
+                ? "bg-blue-600 text-white shadow-inner border-blue-700"
+                : "bg-white text-gray-700 hover:bg-gray-50 border-gray-200 shadow-sm hover:shadow-md"
               }`}
           >
-            <span className="text-lg">{item.icon}</span>
-            <span>{item.name}</span>
+            {/* Contenedor para centrar el contenido */}
+            <div className="flex items-center w-4/5 justify-between">
+              <div className="flex items-center gap-4">
+                <span className="text-2xl opacity-90">{item.icon}</span>
+                <span className="text-left">{item.name}</span>
+              </div>
+
+              {active === item.section && (
+                <span className="w-3.5 h-3.5 bg-white rounded-full"></span>
+              )}
+            </div>
           </button>
         ))}
       </nav>
 
       {/* Botón de salir */}
-      <div className="w-full px-4 mt-6">
+      <div className="mx-4 mt-8 mb-6 w-full max-w-xs md:max-w-md">
         <button
           onClick={handleLogout}
-          className="flex items-center justify-center gap-x-2 w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg text-sm font-medium shadow-md"
-        >
+          className="flex items-center justify-center gap-4 w-full
+              bg-emerald-600 hover:bg-red-700 text-white
+              py-3 rounded-xl text-xl font-medium shadow-lg
+              transition-all duration-300 transform hover:scale-[1.02]
+              border-2 border-emerald-700/20">
           <FaSignOutAlt />
           Cerrar sesión
         </button>

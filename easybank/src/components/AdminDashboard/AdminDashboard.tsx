@@ -22,9 +22,9 @@ const AdminDashboard = () => {
       case 'tarjetas':
       case 'movimientos':
       case 'notfound':
-        return <p>Página no encontrada</p>;
+        return <p className='italic'>Página no encontrada</p>;
       default:
-        return <p>Selecciona una opción del menú.</p>;
+        return <p className='italic'>Selecciona una opción del menú.</p>;
     }
   };
 

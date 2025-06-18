@@ -23,7 +23,9 @@ function App() {
           <Route path="home" element={<DashboardHome />} />
           <Route path="wallet" element={<ExpDashboard />} />
         </Route>
-        <Route path="/admin" element= {<AdminPage/>}></Route>
+        <Route path="/admin" element={<AdminPage />}>
+          <Route path="" />
+        </Route>
       </Routes>
 
       <ToastContainer
