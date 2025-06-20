@@ -11,7 +11,8 @@ interface User {
   active: boolean;
 }
 
-const DUMMY_USERS: User[] = [
+// Cambiamos DUMMY_USERS a INITIAL_USERS para usarlo como estado inicial
+const INITIAL_USERS: User[] = [
   {
     _id: '1',
     name: 'Juan',
@@ -19,51 +20,6 @@ const DUMMY_USERS: User[] = [
     dui: '01234567-8',
     email: 'juan@example.com',
     rol: 'admin',
-    active: true,
-  },
-  {
-    _id: '2',
-    name: 'María',
-    lastname: 'González',
-    dui: '12345678-9',
-    email: 'maria@example.com',
-    rol: 'client',
-    active: false,
-  },
-  {
-    _id: '3',
-    name: 'Carlos',
-    lastname: 'Ramírez',
-    dui: '23456789-0',
-    email: 'carlos@example.com',
-    rol: 'client',
-    active: true,
-  },
-  {
-    _id: '4',
-    name: 'Ana',
-    lastname: 'Martínez',
-    dui: '34567890-1',
-    email: 'ana@example.com',
-    rol: 'client',
-    active: true,
-  },
-  {
-    _id: '5',
-    name: 'Pedro',
-    lastname: 'Sánchez',
-    dui: '45678901-2',
-    email: 'pedro@example.com',
-    rol: 'client',
-    active: false,
-  },
-  {
-    _id: '6',
-    name: 'Laura',
-    lastname: 'Díaz',
-    dui: '56789012-3',
-    email: 'laura@example.com',
-    rol: 'client',
     active: true,
   },
 ];
@@ -158,10 +114,60 @@ const columns: TableColumn<User>[] = [
 
 const ClientTable = () => {
   const [filterText, setFilterText] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
-  const filteredData = DUMMY_USERS.filter(user =>
+  // Usamos el estado para los usuarios, inicializado con INITIAL_USERS
+  const [users, setUsers] = useState<User[]>(INITIAL_USERS);
+
+  const [newUser, setNewUser] = useState({
+    name: '',
+    lastname: '',
+    dui: '',
+    email: '',
+    rol: 'client',
+    active: 'true' // Cambiado a string para que coincida con el valor del select
+  });
+
+  // Filtramos usando el estado users
+  const filteredData = users.filter(user =>
     `${user.name} ${user.lastname}`.toLowerCase().includes(filterText.toLowerCase())
   );
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setNewUser({
+      ...newUser,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Crear nuevo usuario
+    const createdUser: User = {
+      ...newUser,
+      _id: Date.now().toString(), // Genera un ID único
+      active: newUser.active === 'true' // Convertimos a booleano
+    };
+
+    // Actualizamos el estado de los usuarios, agregando el nuevo usuario al principio
+    setUsers([createdUser, ...users]);
+
+    // Cerrar modal y resetear formulario
+    setShowModal(false);
+    setNewUser({
+      name: '',
+      lastname: '',
+      dui: '',
+      email: '',
+      rol: 'client',
+      active: 'true'
+    });
+
+    // Simular actualización de la tabla
+    alert(`Usuario ${createdUser.name} ${createdUser.lastname} creado exitosamente!`);
+  };
 
   return (
     <div className="w-full h-full px-6 py-8 bg-gray-50 rounded-2xl shadow-sm">
@@ -180,8 +186,23 @@ const ClientTable = () => {
               onChange={e => setFilterText(e.target.value)}
               className="pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64 text-gray-700"
             />
-
+            <div className="absolute left-3 top-3 text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
           </div>
+
+          {/* Botón para agregar nuevo usuario */}
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg flex items-center transition shadow-md whitespace-nowrap"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Nuevo Usuario
+          </button>
         </div>
       </div>
 
@@ -263,15 +284,143 @@ const ClientTable = () => {
         <div className="mb-4 sm:mb-0">
           Mostrando {filteredData.length > 5 ? 5 : filteredData.length} de {filteredData.length} clientes
         </div>
-        <div className="flex space-x-2">
-          <button className="px-3 py-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 transition">
-            Exportar CSV
-          </button>
-          <button className="px-3 py-1.5 rounded-lg border border-gray-300 hover:bg-gray-50 transition">
-            Imprimir
-          </button>
-        </div>
       </div>
+
+      {/* Modal para crear nuevo usuario */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-md">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-gray-800">Crear Nuevo Usuario</h2>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit}>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                      Nombre
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={newUser.name}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="lastname" className="block text-sm font-medium text-gray-700 mb-1">
+                      Apellido
+                    </label>
+                    <input
+                      type="text"
+                      id="lastname"
+                      name="lastname"
+                      value={newUser.lastname}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="dui" className="block text-sm font-medium text-gray-700 mb-1">
+                      DUI
+                    </label>
+                    <input
+                      type="text"
+                      id="dui"
+                      name="dui"
+                      value={newUser.dui}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="00000000-0"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={newUser.email}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="rol" className="block text-sm font-medium text-gray-700 mb-1">
+                        Rol
+                      </label>
+                      <select
+                        id="rol"
+                        name="rol"
+                        value={newUser.rol}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="admin">Administrador</option>
+                        <option value="client">Cliente</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="active" className="block text-sm font-medium text-gray-700 mb-1">
+                        Estado
+                      </label>
+                      <select
+                        id="active"
+                        name="active"
+                        value={newUser.active}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Crear Usuario
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
