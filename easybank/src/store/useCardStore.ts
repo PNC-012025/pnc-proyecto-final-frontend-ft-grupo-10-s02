@@ -12,68 +12,67 @@ interface CardStore {
     setPopupOpen: (open: boolean) => void;
     activateCard: () => Promise<void>;
     fetchCardDetails: () => Promise<void>;
+    clearCardDetails: () => void;
 }
 
-const {fetchWhoami} = useEasyBankStore.getState();
 
 export const useCardStore = create<CardStore>()(
-    persist((set) => ({
-        isCardActive: false,
-        popupOpen: false,
-        cardDetails: null,
+    persist(
+        (set) => ({
+            isCardActive: false,
+            popupOpen: false,
+            cardDetails: null,
 
-        setPopupOpen: (open) => set({ popupOpen: open }),
+            setPopupOpen: (open) => set({ popupOpen: open }),
 
-        activateCard: async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) throw new Error('Token no encontrado');
+            clearCardDetails: () => {
+                set({ cardDetails: null });
+            },
 
-                const response = await axios.post('http://localhost:8080/api/card/create', {}, {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+            activateCard: async () => {
+                try {
+                    const token = localStorage.getItem('token');
+                    if (!token) throw new Error('Token no encontrado');
 
-                if (response.status === 201) {
-                    
-                    await useEasyBankStore.getState().fetchWhoami();
-                    set({ popupOpen: false });
-                    toast.success('Tarjeta activada con éxito');
-                } else {
+                    const response = await axios.post('http://localhost:8080/api/card/create', {}, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    if (response.status === 201) {
+                        await useEasyBankStore.getState().fetchWhoami();
+                        set({ popupOpen: false });
+                        toast.success('Tarjeta activada con éxito');
+                    } else {
+                        toast.error('Algo salió mal al activar la tarjeta');
+                    }
+                } catch (error) {
                     toast.error('Algo salió mal al activar la tarjeta');
+                    set({ popupOpen: false });
+                    console.error(error);
                 }
-            } catch (error) {
-                toast.error('Algo salió mal al activar la tarjeta');
-                set({ popupOpen: false });
-                console.error(error);
-            }
-        },
+            },
 
-        fetchCardDetails: async () => {
-            try {
-                const token = localStorage.getItem('token');
+            fetchCardDetails: async () => {
+                try {
+                    const token = localStorage.getItem('token');
+                    if (!token) throw new Error('Token no encontrado');
 
-                if (!token) {
-                    throw new Error('Token no encontrado');
+                    const response = await axios.get('http://localhost:8080/api/account/findown', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    console.log(response.data.data);
+
+                    const parsed = CardDetailsSchema.parse(response.data.data);
+                    set({ cardDetails: parsed });
+                } catch (error) {
+                    toast.error('Error al obtener los datos de la cuenta.');
+                    console.error('Error al obtener datos de la tarjeta!', error);
                 }
-
-
-                const response = await axios.get('http://localhost:8080/api/account/findown', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                });
-                
-                await fetchWhoami();
-                const parsed = CardDetailsSchema.parse(response.data.data);
-                set({ cardDetails: parsed });
-
-            } catch (error) {
-                toast.error('Error al obtener los datos de la cuenta.');
-                console.error('Error al obtener datos de la tarjeta!', error);
-            }
-        },
-
-    }), {
-        name: 'card-store'
-    })
+            },
+        }),
+        {
+            name: 'card-store',
+        }
+    )
 );

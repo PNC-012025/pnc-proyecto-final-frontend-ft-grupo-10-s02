@@ -1,14 +1,15 @@
 import { create } from "zustand";
 import type { RegisterInput, LoginInput } from '../schema/user-schema'
 import axios from 'axios'
+import { useCardStore } from "./useCardStore";
 
 type EasyBankStore = {
     token: string | null;
     isAuthenticated: boolean;
-    isCardActive: boolean;  
+    isCardActive: boolean;
     fetchRegister: (data: RegisterInput) => Promise<void>;
     fetchLogin: (data: LoginInput) => Promise<void>;
-    fetchWhoami: () => Promise<void>; 
+    fetchWhoami: () => Promise<void>;
     logout: () => void;
 };
 
@@ -61,9 +62,9 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
                 },
             });
 
-            
             const active = response.data.data.active;
-        
+            console.log(response.data.data);
+
 
             set({ isCardActive: active });
 
@@ -76,5 +77,6 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
     logout: () => {
         set({ token: null, isAuthenticated: false, isCardActive: false });
         localStorage.removeItem("token");
-    },
+        useCardStore.getState().clearCardDetails();
+    }
 }));
