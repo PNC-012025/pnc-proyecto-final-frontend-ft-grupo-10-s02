@@ -13,8 +13,8 @@ interface SidebarProps {
 
 const menuItems = [
   { name: "Usuarios", section: "usuarios", icon: <FaUser /> },
-  { name: "Tarjetas", section: "tarjetas", icon: <FaTable /> },
-  { name: "Movimientos", section: "movimientos", icon: <FaMap /> },
+  { name: "Transacciones", section: "transacciones", icon: <FaTable /> },
+  { name: "Tarjetas", section: "tarjetas", icon: <FaMap /> },
   { name: "Dashboard", section: "notfound", icon: <FaExclamationCircle /> },
 ];
 

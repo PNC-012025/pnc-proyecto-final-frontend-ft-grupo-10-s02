@@ -1,137 +1,168 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
+import { useAdminStore } from '../../store/useAdminStore';
 
 interface User {
-  _id: string;
+  id: string;
   name: string;
   lastname: string;
   dui: string;
   email: string;
-  rol: string;
+  role: string;
   active: boolean;
 }
-
-// Cambiamos DUMMY_USERS a INITIAL_USERS para usarlo como estado inicial
-const INITIAL_USERS: User[] = [
-  {
-    _id: '1',
-    name: 'Juan',
-    lastname: 'Pérez',
-    dui: '01234567-8',
-    email: 'juan@example.com',
-    rol: 'admin',
-    active: true,
-  },
-];
-
-const columns: TableColumn<User>[] = [
-  {
-    name: <span className="font-bold text-gray-700">ID</span>,
-    selector: (row: User) => row._id,
-    sortable: true,
-    width: '100px',
-    cell: (row) => <span className="text-sm text-gray-600 font-medium">{row._id}</span>,
-  },
-  {
-    name: <span className="font-bold text-gray-700">Nombre</span>,
-    selector: (row: User) => row.name,
-    sortable: true,
-    cell: (row) => (
-      <div className="flex items-center">
-        <div className="bg-gray-200 border-2 border-dashed rounded-xl w-10 h-10 flex items-center justify-center mr-3">
-          <span className="text-gray-600 font-bold text-sm">{row.name.charAt(0)}</span>
-        </div>
-        <div>
-          <span className="block font-medium text-gray-800">{row.name}</span>
-          <span className="block text-sm text-gray-500">{row.email}</span>
-        </div>
-      </div>
-    ),
-  },
-  {
-    name: <span className="font-bold text-gray-700">Apellido</span>,
-    selector: (row: User) => row.lastname,
-    sortable: true,
-    cell: (row) => <span className="text-gray-700 font-medium">{row.lastname}</span>,
-  },
-  {
-    name: <span className="font-bold text-gray-700">DUI</span>,
-    selector: (row: User) => row.dui,
-    cell: (row) => (
-      <div className="bg-gray-100 rounded-md px-2 py-1 inline-block">
-        <span className="text-gray-700 font-mono">{row.dui}</span>
-      </div>
-    ),
-  },
-  {
-    name: <span className="font-bold text-gray-700">Rol</span>,
-    selector: (row: User) => row.rol,
-    cell: (row) => (
-      <span className={`px-3 py-1 rounded-full text-xs font-medium ${row.rol === 'admin'
-        ? 'bg-purple-100 text-purple-800'
-        : 'bg-blue-100 text-blue-800'
-        }`}>
-        {row.rol}
-      </span>
-    ),
-  },
-  {
-    name: <span className="font-bold text-gray-700">Estado</span>,
-    cell: (row: User) => (
-      <div className="flex items-center">
-        <span className={`w-3 h-3 rounded-full mr-2 ${row.active ? 'bg-green-500' : 'bg-red-500'
-          }`}></span>
-        <span className={row.active ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
-          {row.active ? 'Activo' : 'Inactivo'}
-        </span>
-      </div>
-    ),
-  },
-  {
-    name: <span className="font-bold text-gray-700">Acciones</span>,
-    cell: (row: User) => (
-      <div className="flex space-x-2">
-        <button className="p-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-        </button>
-        <button className="p-2 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-600 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-        </button>
-        <button className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-        </button>
-      </div>
-    ),
-  },
-];
 
 const ClientTable = () => {
   const [filterText, setFilterText] = useState('');
   const [showModal, setShowModal] = useState(false);
 
-  // Usamos el estado para los usuarios, inicializado con INITIAL_USERS
-  const [users, setUsers] = useState<User[]>(INITIAL_USERS);
+  const {
+    users,
+    loading,
+    error,
+    fetchAllUsers,
+    getUserById,
+    deleteUser,
+    changeUserRole
+  } = useAdminStore();
 
+  const filteredData = users.filter(user =>
+    `${user.name} ${user.lastname}`.toLowerCase().includes(filterText.toLowerCase())
+  );
+
+  const columns: TableColumn<User>[] = [
+    {
+      name: <span className="font-bold text-gray-700">ID</span>,
+      selector: (row: User) => row.id,
+      sortable: true,
+      width: '100px',
+      cell: (row) => <span className="text-sm text-gray-600 font-medium">{row.id}</span>,
+    },
+    {
+      name: <span className="font-bold text-gray-700">Nombre</span>,
+      selector: (row: User) => row.name,
+      sortable: true,
+      cell: (row) => (
+        <div className="flex items-center">
+          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-10 h-10 flex items-center justify-center mr-3">
+            <span className="text-gray-600 font-bold text-sm">{row.name.charAt(0)}</span>
+          </div>
+          <div>
+            <span className="block font-medium text-gray-800">{row.name}</span>
+            <span className="block text-sm text-gray-500">{row.email}</span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      name: <span className="font-bold text-gray-700">Apellido</span>,
+      selector: (row: User) => row.lastname,
+      sortable: true,
+      cell: (row) => <span className="text-gray-700 font-medium">{row.lastname}</span>,
+    },
+    {
+      name: <span className="font-bold text-gray-700">DUI</span>,
+      selector: (row: User) => row.dui,
+      cell: (row) => (
+        <div className="bg-gray-100 rounded-md px-2 py-1 inline-block">
+          <span className="text-gray-700 font-mono">{row.dui}</span>
+        </div>
+      ),
+    },
+    {
+      name: <span className="font-bold text-gray-700">Rol</span>,
+      selector: (row: User) => row.role,
+      cell: (row) => (
+        <span className={`px-3 py-1 rounded-full text-xs font-medium ${row.role === 'ADMIN'
+          ? 'bg-purple-100 text-purple-800'
+          : 'bg-blue-100 text-blue-800'
+          }`}>
+          {row.role === 'ADMIN' ? 'Administrador' : 'Cliente'}
+        </span>
+      ),
+    },
+    {
+      name: <span className="font-bold text-gray-700">Estado</span>,
+      cell: (row: User) => (
+        <div className="flex items-center">
+          <span className={`w-3 h-3 rounded-full mr-2 ${row.active ? 'bg-green-500' : 'bg-red-500'
+            }`}></span>
+          <span className={row.active ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+            {row.active ? 'Activo' : 'Inactivo'}
+          </span>
+        </div>
+      ),
+    },
+    {
+      name: <span className="font-bold text-gray-700">Acciones</span>,
+      cell: (row: User) => (
+        <div className="flex space-x-2">
+          {/* Ver detalles */}
+          <button
+            className="p-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition"
+            onClick={async () => {
+              const user = await getUserById(row.id);
+              if (user) {
+                alert(`Detalles:\nNombre: ${user.firstName} ${user.lastName}\nEmail: ${user.email}`);
+              }
+            }}
+            title="Ver detalles"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+          {/* Cambiar rol */}
+          <button
+            className="p-2 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-600 transition"
+            onClick={async () => {
+              const nuevoRol = row.role === "admin" ? ["USER"] : ["ADMIN"];
+              await changeUserRole(row.id, nuevoRol);
+              alert("Rol actualizado");
+            }}
+            title="Cambiar rol"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </button>
+          {/* Eliminar usuario */}
+          {row.role !== "ADMIN" && (
+            <button
+              className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition"
+              onClick={async () => {
+                if (window.confirm("¿Seguro que deseas eliminar este usuario?")) {
+                  await deleteUser(row.id);
+                  alert("Usuario eliminado");
+                }
+              }}
+              title="Eliminar usuario"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          )}
+        </div>
+      ),
+    },
+  ];
+
+  // Estado para nuevo usuario
   const [newUser, setNewUser] = useState({
     name: '',
     lastname: '',
     dui: '',
     email: '',
-    rol: 'client',
-    active: 'true' // Cambiado a string para que coincida con el valor del select
+    role: 'USER',
+    active: true
   });
 
-  // Filtramos usando el estado users
-  const filteredData = users.filter(user =>
-    `${user.name} ${user.lastname}`.toLowerCase().includes(filterText.toLowerCase())
-  );
+  // Cargar usuarios al montar el componente
+  useEffect(() => {
+    fetchAllUsers();
+  }, [fetchAllUsers]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -141,33 +172,53 @@ const ClientTable = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Crear nuevo usuario
-    const createdUser: User = {
-      ...newUser,
-      _id: Date.now().toString(), // Genera un ID único
-      active: newUser.active === 'true' // Convertimos a booleano
-    };
+    try {
+      // Crear nuevo usuario en el backend
+      await createUser({
+        ...newUser,
+        active: newUser.active === true
+      });
 
-    // Actualizamos el estado de los usuarios, agregando el nuevo usuario al principio
-    setUsers([createdUser, ...users]);
+      // Recargar usuarios
+      await fetchAllUsers();
 
-    // Cerrar modal y resetear formulario
-    setShowModal(false);
-    setNewUser({
-      name: '',
-      lastname: '',
-      dui: '',
-      email: '',
-      rol: 'client',
-      active: 'true'
-    });
+      // Cerrar modal y resetear formulario
+      setShowModal(false);
+      setNewUser({
+        name: '',
+        lastname: '',
+        dui: '',
+        email: '',
+        role: 'client',
+        active: true
+      });
 
-    // Simular actualización de la tabla
-    alert(`Usuario ${createdUser.name} ${createdUser.lastname} creado exitosamente!`);
+      // Mostrar mensaje de éxito
+      alert('Usuario creado exitosamente!');
+    } catch (err) {
+      alert('Error al crear el usuario');
+    }
   };
+
+  // Manejar estados de carga y error
+  if (loading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <p>Cargando usuarios...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full px-6 py-8 bg-gray-50 rounded-2xl shadow-sm">
@@ -374,12 +425,12 @@ const ClientTable = () => {
                       <select
                         id="rol"
                         name="rol"
-                        value={newUser.rol}
+                        value={newUser.role}
                         onChange={handleInputChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       >
-                        <option value="admin">Administrador</option>
-                        <option value="client">Cliente</option>
+                        <option value="ADMIN">Administrador</option>
+                        <option value="USER">Cliente</option>
                       </select>
                     </div>
 
@@ -390,7 +441,7 @@ const ClientTable = () => {
                       <select
                         id="active"
                         name="active"
-                        value={newUser.active}
+                        value={newUser.active ? "true" : "false"}
                         onChange={handleInputChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       >

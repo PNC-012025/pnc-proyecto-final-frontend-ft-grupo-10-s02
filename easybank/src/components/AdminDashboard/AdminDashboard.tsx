@@ -19,8 +19,8 @@ const AdminDashboard = () => {
     switch (delayedSection) {
       case 'usuarios':
         return <ClientTable />;
+      case 'transacciones':
       case 'tarjetas':
-      case 'movimientos':
       case 'notfound':
         return <p className='italic'>Página no encontrada</p>;
       default:
