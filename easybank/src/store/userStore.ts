@@ -36,7 +36,6 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
     }
   },
 
-  // Quitamos el parámetro navigate
   fetchLogin: async (data) => {
     try {
       const response = await axios.post(`${API_URL}/auth/login`, data);

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import ClientTable from './ClientTable';
 import AdminSidebar from './AdminSidebar';
+import TransactionSearch from './TransactionSearch';
 
 const AdminDashboard = () => {
-  // Eliminado activeSection y setActiveSection porque no se usan
   const [loading, setLoading] = useState(false);
   const [delayedSection, setDelayedSection] = useState<string>('');
 
@@ -12,7 +12,7 @@ const AdminDashboard = () => {
     setTimeout(() => {
       setDelayedSection(section);
       setLoading(false);
-    }, 500); // animación de medio segundo
+    }, 500);
   };
 
   const renderContent = () => {
@@ -20,8 +20,7 @@ const AdminDashboard = () => {
       case 'usuarios':
         return <ClientTable />;
       case 'transacciones':
-      case 'tarjetas':
-      case 'notfound':
+        return <TransactionSearch />
         return <p className='italic'>Página no encontrada</p>;
       default:
         return <p className='italic'>Selecciona una opción del menú.</p>;

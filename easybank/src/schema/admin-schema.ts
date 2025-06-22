@@ -1,16 +1,15 @@
-// src/schema/admin-schema.ts
-import { z } from 'zod';
+import { z } from "zod";
 
 export const UserStatusSchema = z.object({
   id: z.string().uuid(),
-  status: z.boolean()
+  status: z.boolean(),
 });
 
 export const TransactionFiltersSchema = z.object({
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
   minAmount: z.number().optional(),
-  maxAmount: z.number().optional()
+  maxAmount: z.number().optional(),
 });
 
 export type UserStatusInput = z.infer<typeof UserStatusSchema>;

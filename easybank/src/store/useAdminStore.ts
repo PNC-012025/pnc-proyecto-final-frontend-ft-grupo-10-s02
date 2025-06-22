@@ -1,50 +1,29 @@
-// src/store/useAdminStore.ts
 import { create } from "zustand";
 import axios from "axios";
-import {
-  UserStatusInput,
-  TransactionFiltersInput,
-} from "../schema/admin-schema";
+import { UserStatusInput } from "../schema/admin-schema";
+import { toast } from "react-toastify";
 
 interface User {
   id: string;
   username: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  isActive: boolean;
-  createdAt: string;
+  first_name: string;
+  last_name: string;
+  active: boolean;
   dui: string;
-}
-
-interface Transaction {
-  id: string;
-  amount: number;
-  description: string;
-  date: string;
-  senderAccount: string;
-  receiverAccount: string;
-  status: "completed" | "pending" | "failed";
+  role: "ADMIN" | "USER";
 }
 
 interface AdminStoreState {
   users: User[];
-  transactions: Transaction[];
   loading: boolean;
   error: string | null;
   fetchAllUsers: () => Promise<void>;
-  fetchAllTransactions: (filters?: TransactionFiltersInput) => Promise<void>;
   updateUserStatus: (data: UserStatusInput) => Promise<void>;
   getUserById: (id: string) => Promise<User | null>;
   deleteUser: (id: string) => Promise<void>;
-  changeUserRole: (id: string, roles: string[]) => Promise<void>;
   resetStore: () => void;
-  getUserTransactions: (
-    userId: string,
-    limit?: number,
-    page?: number
-  ) => Promise<void>;
-  getUserAccounts: (userId: string) => Promise<any[] | null>;
+  updateUserRole: (userId: string, role: string) => Promise<void>;
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -55,47 +34,34 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
   loading: false,
   error: null,
 
-  // Obtener todos los usuarios
   fetchAllUsers: async () => {
     set({ loading: true, error: null });
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`${API_URL}/admin/userlist`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      set({ users: response.data.data, loading: false });
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      set({
-        error: axios.isAxiosError(error)
-          ? error.response?.data?.message || error.message
-          : "Error desconocido",
-        loading: false,
-      });
-    }
-  },
 
-  fetchAllTransactions: async (filters = {}) => {
-    set({ loading: true, error: null });
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(`${API_URL}/admin/transactions`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: filters,
+      const users = (response.data.data as any[]).map((user) => {
+        const nameParts = (user.name ?? "Sin nombre").split(" ");
+        const first_name = nameParts.slice(0, -1).join(" ") || "Sin nombre";
+        const last_name = nameParts.slice(-1)[0] || "";
+
+        return {
+          id: user.id,
+          username: user.username || "",
+          email: user.email,
+          first_name,
+          last_name,
+          active: user.active ?? false,
+          dui: user.dui || "Sin DUI",
+          role: user.roles?.[0] ?? "USER",
+        };
       });
-      set({ transactions: response.data.data, loading: false });
+
+      set({ users, loading: false });
     } catch (error) {
-      console.error("Error fetching transactions:", error);
-      set({
-        error: axios.isAxiosError(error)
-          ? error.response?.data?.message || error.message
-          : "Error desconocido",
-        loading: false,
-      });
+      // papu
     }
   },
 
@@ -175,49 +141,6 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
     }
   },
 
-  changeUserRole: async (id: string, roles: string[]) => {
-    set({ loading: true, error: null });
-    try {
-      const token = localStorage.getItem("token");
-      await axios.put(
-        `${API_URL}/admin/userlist/changerole/${id}`,
-        { roles },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      await get().fetchAllUsers();
-      set({ loading: false });
-    } catch (error) {
-      set({
-        error: axios.isAxiosError(error)
-          ? error.response?.data?.message || error.message
-          : "Error desconocido",
-        loading: false,
-      });
-    }
-  },
-
-  getUserTransactions: async (userId: string, limit = 10, page = 0) => {
-    set({ loading: true, error: null });
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${API_URL}/admin/userlist/${userId}/transactions`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { limit, page },
-        }
-      );
-      set({ transactions: response.data.data, loading: false });
-    } catch (error) {
-      set({
-        error: axios.isAxiosError(error)
-          ? error.response?.data?.message || error.message
-          : "Error desconocido",
-        loading: false,
-      });
-    }
-  },
-
   getUserAccounts: async (userId: string) => {
     set({ loading: true, error: null });
     try {
@@ -241,11 +164,47 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
     }
   },
 
+  updateUserRole: async (userId: string, role: string) => {
+    set({ loading: true });
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `${API_URL}/admin/userlist/changerole/${userId}`,
+        { roles: [role] }, // Enviar como array
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Actualización optimista
+      set((state) => ({
+        users: state.users.map((user) =>
+          user.id === userId
+            ? { ...user, role: role as "ADMIN" | "USER" }
+            : user
+        ),
+        loading: false,
+      }));
+      toast.success("Rol actualizado correctamente");
+    } catch (error) {
+      console.error("Error updating user role:", error);
+      set({
+        error: axios.isAxiosError(error)
+          ? error.response?.data?.message || error.message
+          : "Error al actualizar rol",
+        loading: false,
+      });
+      toast.error("Error al actualizar el rol");
+    }
+  },
+
   // Resetear store
   resetStore: () =>
     set({
       users: [],
-      transactions: [],
       error: null,
       loading: false,
     }),

@@ -2,8 +2,6 @@ import { useState, useEffect } from "react"; // Importar useEffect
 import {
   FaUser,
   FaTable,
-  FaMap,
-  FaExclamationCircle,
   FaSignOutAlt,
 } from "react-icons/fa";
 
@@ -14,8 +12,6 @@ interface SidebarProps {
 const menuItems = [
   { name: "Usuarios", section: "usuarios", icon: <FaUser /> },
   { name: "Transacciones", section: "transacciones", icon: <FaTable /> },
-  { name: "Tarjetas", section: "tarjetas", icon: <FaMap /> },
-  { name: "Dashboard", section: "notfound", icon: <FaExclamationCircle /> },
 ];
 
 const AdminSidebar = ({ setActiveSection }: SidebarProps) => {

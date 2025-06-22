@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
+    "@hookform/resolvers": "^5.1.1",
     "@tailwindcss/vite": "^4.1.8",
     "axios": "^1.9.0",
     "chart.js": "^4.4.9",
@@ -35,7 +36,7 @@
     "swiper": "^11.2.8",
     "tailwindcss": "^4.1.8",
     "three": "^0.176.0",
-    "zod": "^3.25.56",
+    "zod": "^3.25.67",
     "zustand": "^5.0.5"
   },
   "devDependencies": {
