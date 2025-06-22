@@ -77,10 +77,8 @@ const CreateUserModal = () => {
 				onClose={() => setIsOpen(false)}
 				className="relative z-50"
 			>
-				{/* Fondo oscuro con transición */}
 				<div className="fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity" aria-hidden="true" />
 
-				{/* Contenedor del modal centrado */}
 				<div className="fixed inset-0 flex items-center justify-center p-4">
 					<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white shadow-xl transition-all">
 						{/* Encabezado del modal */}
