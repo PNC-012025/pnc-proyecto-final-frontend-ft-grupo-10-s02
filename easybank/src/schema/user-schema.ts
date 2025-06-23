@@ -7,7 +7,6 @@ export const RegisterUserSchema = z.object({
   dui: z.string(),
   password: z.string(),
   email: z.string(),
-  role: z.enum(["ADMIN", "USER"]), // modifico Juan
 });
 
 export const LoginUserSchema = z.object({

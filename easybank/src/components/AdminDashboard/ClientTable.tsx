@@ -3,6 +3,7 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import { useAdminStore } from "../../store/useAdminStore";
 import { toast } from "react-toastify";
 import CreateUserModal from "./CreateUserModal";
+import UserDetailsPopup from "./UserDetailsPopup";
 
 interface User {
   id: string;
@@ -17,13 +18,15 @@ interface User {
 
 const ClientTable = () => {
   const [filterText, setFilterText] = useState("");
+  const [showDetails, setShowDetails] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const {
     users,
     loading,
     error,
     fetchAllUsers,
-    getUserById,
+    //getUserById,
     deleteUser,
     updateUserRole,
   } = useAdminStore();
@@ -119,15 +122,12 @@ const ClientTable = () => {
           {/* Ver detalles */}
           <button
             className="p-2 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-600 transition"
-            onClick={async () => {
-              const user = await getUserById(row.id);
-              if (user) {
-                alert(
-                  `Detalles:\nNombre: ${user.first_name} ${user.last_name}\nEmail: ${user.email}`
-                );
-              }
+            onClick={() => {
+              setSelectedUserId(row.id);
+              setShowDetails(true);
             }}
-            title="Ver detalles">
+            title="Ver detalles"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4"
@@ -149,7 +149,7 @@ const ClientTable = () => {
             </svg>
           </button>
           {/* Cambiar rol */}
-          <button
+          < button
             className="p-2 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-600 transition"
             onClick={async () => {
               const newRole = row.role === "ADMIN" ? "USER" : "ADMIN";
@@ -162,7 +162,7 @@ const ClientTable = () => {
                 await updateUserRole(row.id, newRole);
               }
             }}
-            title="Cambiar rol">
+            title="Cambiar rol" >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4"
@@ -178,34 +178,36 @@ const ClientTable = () => {
             </svg>
           </button>
           {/* Eliminar usuario */}
-          {row.role !== "ADMIN" && (
-            <button
-              className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition"
-              onClick={async () => {
-                if (
-                  window.confirm("¿Seguro que deseas eliminar este usuario?")
-                ) {
-                  await deleteUser(row.id);
-                  toast.success("Usuario eliminado correctamente");
-                }
-              }}
-              title="Eliminar usuario">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
-            </button>
-          )}
-        </div>
+          {
+            row.role !== "ADMIN" && (
+              <button
+                className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition"
+                onClick={async () => {
+                  if (
+                    window.confirm("¿Seguro que deseas eliminar este usuario?")
+                  ) {
+                    await deleteUser(row.id);
+                    toast.success("Usuario eliminado correctamente");
+                  }
+                }}
+                title="Eliminar usuario">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            )
+          }
+        </div >
       ),
     },
   ];
@@ -354,6 +356,12 @@ const ClientTable = () => {
           {filteredData.length} clientes
         </div>
       </div>
+      {showDetails && selectedUserId && (
+        <UserDetailsPopup
+          userId={selectedUserId}
+          onClose={() => setShowDetails(false)}
+        />
+      )}
     </div>
   );
 };

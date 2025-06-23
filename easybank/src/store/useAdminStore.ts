@@ -109,7 +109,22 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
       set({ loading: false });
-      return response.data.data; // Ajusta según la respuesta real
+
+      const user = response.data.data;
+      const nameParts = (user.name ?? "Sin nombre").split(" ");
+      const first_name = nameParts.slice(0, -1).join(" ") || "Sin nombre";
+      const last_name = nameParts.slice(-1)[0] || "";
+
+      return {
+        id: user.id,
+        username: user.username || "",
+        email: user.email,
+        first_name,
+        last_name,
+        active: user.active ?? false,
+        dui: user.dui || "Sin DUI",
+        role: user.roles?.[0] ?? "USER",
+      } as User;
     } catch (error) {
       set({
         error: axios.isAxiosError(error)

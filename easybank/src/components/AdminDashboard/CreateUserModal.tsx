@@ -17,21 +17,18 @@ const CreateUserModal = () => {
 		register,
 		handleSubmit,
 		reset,
+		trigger,
 		formState: { errors, isSubmitting },
 	} = useForm<RegisterFormData>({
 		resolver: zodResolver(RegisterUserSchema),
+		mode: "onTouched",
 	});
 
 	const onSubmit = async (data: RegisterFormData) => {
-
-		const hasEmptyFields = Object.values(data).some(value => !value);
-
-		if (hasEmptyFields) {
-			setShowEmptyFieldAlert(true);
-			return;
-		}
+		console.log("onSubmit ejecutado", data);
 		try {
 			const token = localStorage.getItem("token");
+			console.log("Enviando petición a:", `${import.meta.env.VITE_API_URL}/auth/register`, data);
 			await axios.post(
 				`${import.meta.env.VITE_API_URL}/auth/register`,
 				data,
@@ -43,11 +40,16 @@ const CreateUserModal = () => {
 			fetchAllUsers();
 			reset();
 			setIsOpen(false);
-		} catch (e) {
-			toast.error("Error al crear usuario");
-			console.log(e);
-
+		} catch (e: any) {
+			console.log("Error en la petición:", e);
+			const msg = e?.response?.data?.message || "Error al crear usuario";
+			toast.error(msg);
 		}
+	};
+
+	const onError = (formErrors: any) => {
+		console.log("Errores de validación:", formErrors);
+		setShowEmptyFieldAlert(true);
 	};
 
 	const handleOpen = () => {
@@ -55,10 +57,6 @@ const CreateUserModal = () => {
 		setIsOpen(true);
 		reset();
 	};
-
-	const { trigger } = useForm<RegisterFormData>({
-		resolver: zodResolver(RegisterUserSchema),
-	});
 
 	return (
 		<>
@@ -100,7 +98,7 @@ const CreateUserModal = () => {
 						</div>
 
 						{/* Formulario */}
-						<form onSubmit={handleSubmit(onSubmit)} className="mt-5 space-y-5 px-6 pb-1">
+						<form onSubmit={handleSubmit(onSubmit, onError)} className="mt-5 space-y-5 px-6 pb-1">
 							{/* Alerta de campos vacíos */}
 							{showEmptyFieldAlert && (
 								<div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
