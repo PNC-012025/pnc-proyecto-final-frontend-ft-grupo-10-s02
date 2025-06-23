@@ -11,21 +11,11 @@ const TransactionSearch = () => {
 			toast.error('Por favor ingrese un ID de usuario');
 			return;
 		}
-
 		await fetchTransactions(userId);
+
+
 	};
 
-	// Función para traducir estados
-	const translateStatus = (status: string) => {
-		switch (status) {
-			case 'COMPLETED': return 'Completada';
-			case 'PENDING': return 'Pendiente';
-			case 'FAILED': return 'Fallida';
-			default: return status;
-		}
-	};
-
-	// Función para traducir tipos
 	const translateType = (type: string) => {
 		switch (type) {
 			case 'DEPOSIT': return 'Depósito';
@@ -34,7 +24,6 @@ const TransactionSearch = () => {
 			default: return type;
 		}
 	};
-
 	return (
 		<div className="w-full h-full px-6 py-8 bg-gray-50 rounded-2xl shadow-sm">
 			<div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
@@ -92,9 +81,10 @@ const TransactionSearch = () => {
 									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
 									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Monto</th>
 									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cuenta</th>
 									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
 									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
 								</tr>
 							</thead>
 							<tbody className="bg-white divide-y divide-gray-200">
@@ -102,33 +92,19 @@ const TransactionSearch = () => {
 									<tr key={transaction.id} className="hover:bg-gray-50">
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">{transaction.id.slice(0, 8)}...</td>
 										<td className="px-6 py-4 whitespace-nowrap">
-											<span className={`px-2 py-1 rounded-full text-xs font-medium ${transaction.type === 'DEPOSIT'
-												? 'bg-green-100 text-green-800'
-												: transaction.type === 'WITHDRAWAL'
-													? 'bg-red-100 text-red-800'
-													: 'bg-blue-100 text-blue-800'
-												}`}>
-												{transaction.type === 'DEPOSIT' ? '+' : '-'}
-												${transaction.amount.toFixed(2)}
+											<span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+												${Number(transaction.amount).toFixed(2)}
 											</span>
 										</td>
 										<td className="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{transaction.description}</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.accountNumber}</td>
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{new Date(transaction.date).toLocaleDateString()}
+											{transaction.date ? new Date(transaction.date).toLocaleString() : ''}
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 											{translateType(transaction.type)}
 										</td>
-										<td className="px-6 py-4 whitespace-nowrap">
-											<span className={`px-2 py-1 rounded-full text-xs font-medium ${transaction.status === 'COMPLETED'
-												? 'bg-green-100 text-green-800'
-												: transaction.status === 'PENDING'
-													? 'bg-yellow-100 text-yellow-800'
-													: 'bg-red-100 text-red-800'
-												}`}>
-												{translateStatus(transaction.status)}
-											</span>
-										</td>
+										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.name}</td>
 									</tr>
 								))}
 							</tbody>

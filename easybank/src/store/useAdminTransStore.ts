@@ -29,7 +29,7 @@ export const useAdminTransStore = create<AdminTransStoreState>((set) => ({
       );
 
       set({
-        transactions: response.data,
+        transactions: response.data.data,
         loading: false,
       });
     } catch (error) {

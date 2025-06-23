@@ -6,13 +6,12 @@ export const TransactionSearchSchema = z.object({
 
 export const TransactionSchema = z.object({
   id: z.string().uuid(),
-  amount: z.number().positive(),
+  amount: z.number(),
   description: z.string(),
-  date: z.string().datetime(),
-  senderAccount: z.string(),
-  receiverAccount: z.string(),
-  status: z.enum(["COMPLETED", "PENDING", "FAILED"]),
-  type: z.enum(["DEPOSIT", "WITHDRAWAL", "TRANSFER"]),
+  accountNumber: z.string(),
+  date: z.string(),
+  type: z.string(),
+  name: z.string(),
 });
 
 export type TransactionSearchInput = z.infer<typeof TransactionSearchSchema>;
