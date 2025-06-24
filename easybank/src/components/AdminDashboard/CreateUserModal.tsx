@@ -40,14 +40,18 @@ const CreateUserModal = () => {
 			fetchAllUsers();
 			reset();
 			setIsOpen(false);
-		} catch (e: any) {
+		} catch (e: unknown) {
 			console.log("Error en la petición:", e);
-			const msg = e?.response?.data?.message || "Error al crear usuario";
+			let msg = "Error al crear usuario";
+			if (typeof e === "object" && e !== null && "response" in e) {
+				const err = e as { response?: { data?: { message?: string } } };
+				msg = err.response?.data?.message || msg;
+			}
 			toast.error(msg);
 		}
 	};
 
-	const onError = (formErrors: any) => {
+	const onError = (formErrors: import("react-hook-form").FieldErrors<RegisterFormData>) => {
 		console.log("Errores de validación:", formErrors);
 		setShowEmptyFieldAlert(true);
 	};

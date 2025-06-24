@@ -61,7 +61,7 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
 
       set({ users, loading: false });
     } catch (error) {
-      // papu
+      console.log(error);
     }
   },
 

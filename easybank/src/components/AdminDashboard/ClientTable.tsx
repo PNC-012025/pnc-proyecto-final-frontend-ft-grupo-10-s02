@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { useAdminStore } from "../../store/useAdminStore";
 import { toast } from "react-toastify";
+import { useAdminStore } from "../../store/useAdminStore";
+import { ChangeRolePopup } from "./ChangeRolePopup";
+import { DeleteUserPopup } from "./DeleteUserPopup";
 import CreateUserModal from "./CreateUserModal";
 import UserDetailsPopup from "./UserDetailsPopup";
+
 
 interface User {
   id: string;
@@ -20,6 +23,10 @@ const ClientTable = () => {
   const [filterText, setFilterText] = useState("");
   const [showDetails, setShowDetails] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+
+  const [showRolePopup, setShowRolePopup] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<{ id: string, role: string, name: string } | null>(null);
 
   const {
     users,
@@ -42,9 +49,31 @@ const ClientTable = () => {
       name: <span className="font-bold text-gray-700">ID</span>,
       selector: (row: User) => row.id,
       sortable: true,
-      width: "100px",
+      width: "180px",
       cell: (row) => (
-        <span className="text-sm text-gray-600 font-medium">{row.id}</span>
+        <div className="flex items-center space-x-2">
+          <span className="text-sm text-gray-600 font-medium">{row.id}</span>
+          <button
+            className="p-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 transition"
+            onClick={() => {
+              navigator.clipboard.writeText(row.id);
+              toast.success("ID copiado al portapapeles");
+            }}
+            title="Copiar ID"
+            type="button"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" strokeWidth={2} stroke="currentColor" fill="none" />
+              <rect x="3" y="3" width="13" height="13" rx="2" ry="2" strokeWidth={2} stroke="currentColor" fill="none" />
+            </svg>
+          </button>
+        </div>
       ),
     },
     {
@@ -149,62 +178,90 @@ const ClientTable = () => {
             </svg>
           </button>
           {/* Cambiar rol */}
-          < button
-            className="p-2 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-600 transition"
-            onClick={async () => {
-              const newRole = row.role === "ADMIN" ? "USER" : "ADMIN";
-              if (
-                window.confirm(
-                  `¿Cambiar rol a ${newRole === "ADMIN" ? "Administrador" : "Usuario"
-                  }?`
-                )
-              ) {
-                await updateUserRole(row.id, newRole);
-              }
-            }}
-            title="Cambiar rol" >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-              />
-            </svg>
-          </button>
-          {/* Eliminar usuario */}
           {
-            row.role !== "ADMIN" && (
+            <>
+              {/* Botón para cambiar rol */}
               <button
-                className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition"
-                onClick={async () => {
-                  if (
-                    window.confirm("¿Seguro que deseas eliminar este usuario?")
-                  ) {
-                    await deleteUser(row.id);
-                    toast.success("Usuario eliminado correctamente");
-                  }
+                className="p-2 rounded-lg bg-yellow-100 hover:bg-yellow-200 text-yellow-600 transition"
+                onClick={() => {
+                  setSelectedUser({
+                    id: row.id,
+                    role: row.role,
+                    name: `${row.first_name} ${row.last_name}`
+                  });
+                  setShowRolePopup(true);
                 }}
-                title="Eliminar usuario">
+                title="Cambiar rol"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                   />
                 </svg>
               </button>
+
+              {/* 3. EL POPUP VA JUSTO AQUÍ, DESPUÉS DEL BOTÓN */}
+              {selectedUser && (
+                <ChangeRolePopup
+                  isOpen={showRolePopup}
+                  onClose={() => setShowRolePopup(false)}
+                  onConfirm={async () => {
+                    const newRole = selectedUser.role === "ADMIN" ? "USER" : "ADMIN";
+                    await updateUserRole(selectedUser.id, newRole);
+                    setShowRolePopup(false);
+                  }}
+                  userName={selectedUser.name}
+                  currentRole={selectedUser.role === "ADMIN" ? "Administrador" : "Usuario"}
+                  newRole={selectedUser.role === "ADMIN" ? "Usuario" : "Administrador"}
+                />
+              )}
+            </>
+          }
+          {/* Eliminar usuario */}
+          {
+            row.role !== "ADMIN" && (
+              <>
+                <button
+                  className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition"
+                  onClick={() => setShowDeletePopup(true)}
+                  title="Eliminar usuario"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+
+                <DeleteUserPopup
+                  isOpen={showDeletePopup}
+                  onClose={() => setShowDeletePopup(false)}
+                  onConfirm={async () => {
+                    await deleteUser(row.id);
+                    toast.success("Usuario eliminado correctamente");
+                    setShowDeletePopup(false);
+                  }}
+                  userName={`${row.first_name} ${row.last_name}`}
+                />
+              </>
             )
           }
         </div >
