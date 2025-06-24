@@ -15,7 +15,7 @@ interface CardStore {
     clearCardDetails: () => void;
 }
 
-
+//funcion de limpiar
 export const useCardStore = create<CardStore>()(
     persist(
         (set) => ({
