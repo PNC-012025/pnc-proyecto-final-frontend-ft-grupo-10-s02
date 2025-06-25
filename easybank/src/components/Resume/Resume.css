@@ -4,7 +4,7 @@
     background-color: #fff;
     border-radius: 20px;
 
-    box-shadow: 10pc 10px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
     margin-left: 0px;
     margin-top: -50px;
 }
@@ -65,63 +65,63 @@
 }
 
 .card-saving{
-    background-color: #131a39;
-    border: 2px solid #131a39;
+    background-color: #DBFCE7;
+    border: 2px solid #25a044;
     .icon-card{
-        background-color: #131a39; 
-        color: #fff;
+        background-color: #DBFCE7; 
+        color: #25a044;
     }
     .prg-saving{
-        color: #fff;
+        color: #25a044;
     }
     .number-saving{
-        color: #fff;
+        color: #25a044;
     }
 }
 
 .card-hl{
-    background-color: #131a39;
-    border: 2px solid #131a39;
+    background-color: #FFE2E2;
+    border: 2px solid #bd2326;
     .icon-card{
-        background-color: #131a39; 
-        color: #fff;
+        background-color: #FFE2E2; 
+        color: #bd2326;
     }
     .prg-hl{
-        color: #fff;
+        color: #bd2326;
     }
     .number-hl{
-        color: #fff;
+        color: #bd2326;
     }
 }
 
 .card-home{
-    background-color: #131a39;
-    border: 2px solid #131a39;
+    background-color: #DBEAFE;
+    border: 2px solid #0021B4;
     .icon-card{
-        background-color: #131a39; 
-        color: #fff;
+        background-color: #DBEAFE; 
+        color: #0021B4;
     }
     .prg-home{
-        color: #fff;
+        color: #0021B4;
     }
     .number-home{
-        color: #fff;
+        color: #0021B4;
     }
 }
 
 .card-pl{
-    background-color: #131a39;
-    border: 2px solid #131a39;
+    background-color: #EDD3ED;
+    border: 2px solid #C544C7;
 
     .icon-card{
-        background-color: #131a39; 
-        color: #fff;
+        background-color: #EDD3ED; 
+        color: #C544C7;
     }
     .prg-pl{
-        color: #fff;
+        color: #C544C7;
     }
     .number-pl{
-        color: #fff;
+        color: #C544C7;
     }
 }
 

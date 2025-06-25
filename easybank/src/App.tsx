@@ -8,6 +8,7 @@ import { ExpDashboard } from "./components/ExpenseDashboard/ExpDashboard";
 
 import { ExpenseProvider } from "./context/ExpenseContext";
 import { ToastContainer } from "react-toastify";
+import { Transfer } from "./pages/Transfer";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route index element={<DashboardHome />} />
           <Route path="home" element={<DashboardHome />} />
           <Route path="wallet" element={<ExpDashboard />} />
+          <Route path="transfer" element={<Transfer />} />
         </Route>
       </Routes>
 
