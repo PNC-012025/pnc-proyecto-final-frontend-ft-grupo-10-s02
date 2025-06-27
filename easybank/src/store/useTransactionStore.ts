@@ -1,7 +1,7 @@
-import { create } from 'zustand';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useCardStore } from './useCardStore';
+import { create } from "zustand";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useCardStore } from "./useCardStore";
 
 type FormData = {
   firstName: string;
@@ -27,14 +27,15 @@ interface TransactionState {
   sendTransaction: (data: FormData, onSuccess?: () => void) => Promise<void>;
   transactions: Transaction[];
   fetchTransactions: () => Promise<void>;
+  getSentTransactions: () => Transaction[];
+  getReceivedTransactions: () => Transaction[];
 }
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
-
 const { fetchCardDetails } = useCardStore.getState();
 
-export const useTransactionStore = create<TransactionState>((set) => ({
+export const useTransactionStore = create<TransactionState>((set, get) => ({
   popupOpen: false,
   setPopupOpen: (open) => set({ popupOpen: open }),
   transactions: [],
@@ -53,12 +54,13 @@ export const useTransactionStore = create<TransactionState>((set) => ({
       };
 
       await axios.post(`${API_BASE}/transaction/create`, processedData, config);
-      toast.success('Transacción enviada con éxito');
+      toast.success("Transacción enviada con éxito");
       onSuccess?.();
       await fetchCardDetails();
       await useTransactionStore.getState().fetchTransactions();
     } catch (error) {
-      toast.error('Error al enviar la transacción');
+      toast.error("Error al enviar la transacción");
+      console.log(error);
     }
   },
 
@@ -80,8 +82,16 @@ export const useTransactionStore = create<TransactionState>((set) => ({
         set({ transactions: [] });
       }
     } catch (error) {
-      toast.error('Error al cargar las transacciones');
+      toast.error("Error al cargar las transacciones");
+      console.log(error);
       set({ transactions: [] });
     }
-  }
+  },
+  getSentTransactions: () => {
+    return get().transactions.filter((tx) => tx.type === "SENDER");
+  },
+
+  getReceivedTransactions: () => {
+    return get().transactions.filter((tx) => tx.type === "RECEIVER");
+  },
 }));
