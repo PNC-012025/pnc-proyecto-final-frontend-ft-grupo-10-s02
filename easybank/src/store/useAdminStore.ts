@@ -11,7 +11,7 @@ interface User {
   last_name: string;
   active: boolean;
   dui: string;
-  role: "ADMIN" | "USER";
+  role: "ROLE_ADMIN" | "ROLE_USER";
 }
 
 interface AdminStoreState {
@@ -198,7 +198,7 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
       set((state) => ({
         users: state.users.map((user) =>
           user.id === userId
-            ? { ...user, role: role as "ADMIN" | "USER" }
+            ? { ...user, role: role as "ROLE_ADMIN" | "ROLE_USER" }
             : user
         ),
         loading: false,

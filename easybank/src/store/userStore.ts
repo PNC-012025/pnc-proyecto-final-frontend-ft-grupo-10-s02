@@ -2,7 +2,7 @@ import { create } from "zustand";
 import type { RegisterInput, LoginInput } from "../schema/user-schema";
 import axios from "axios";
 
-type UserRole = "USER" | "ADMIN";
+type UserRole = "ROLE_USER" | "ROLE_ADMIN";
 
 type EasyBankStore = {
   token: string | null;
@@ -83,7 +83,7 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
   },
 
   isAdmin: () => {
-    return get().userRoles.includes("ADMIN");
+    return get().userRoles.includes("ROLE_ADMIN");
   },
 
   logout: () => {

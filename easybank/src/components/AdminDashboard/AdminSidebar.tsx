@@ -4,6 +4,7 @@ import {
   FaTable,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { FaTableList } from "react-icons/fa6";
 
 interface SidebarProps {
   setActiveSection: (section: string) => void;
@@ -12,6 +13,7 @@ interface SidebarProps {
 const menuItems = [
   { name: "Usuarios", section: "usuarios", icon: <FaUser /> },
   { name: "Transacciones", section: "transacciones", icon: <FaTable /> },
+  { name: "Depósitos", section: "depositos", icon: <FaTableList /> },
 ];
 
 const AdminSidebar = ({ setActiveSection }: SidebarProps) => {
@@ -69,10 +71,6 @@ const AdminSidebar = ({ setActiveSection }: SidebarProps) => {
                 <span className="text-2xl opacity-90">{item.icon}</span>
                 <span className="text-left">{item.name}</span>
               </div>
-
-              {active === item.section && (
-                <span className="w-3.5 h-3.5 bg-white rounded-full"></span>
-              )}
             </div>
           </button>
         ))}

@@ -6,8 +6,9 @@ interface AdminTransStoreState {
   transactions: Transaction[];
   loading: boolean;
   error: string | null;
-  fetchTransactions: (userId: string) => Promise<void>;
+  fetchTransactions: () => Promise<void>;
   reset: () => void;
+  findById: (id: string) => Promise<void>;
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -17,16 +18,13 @@ export const useAdminTransStore = create<AdminTransStoreState>((set) => ({
   loading: false,
   error: null,
 
-  fetchTransactions: async (userId: string) => {
+  fetchTransactions: async () => {
     set({ loading: true, error: null });
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${API_URL}/admin/userlist/${userId}/transactions`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await axios.get(`${API_URL}/admin/findall`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       set({
         transactions: response.data.data,
@@ -39,6 +37,30 @@ export const useAdminTransStore = create<AdminTransStoreState>((set) => ({
         errorMessage = error.response?.data?.message || error.message;
       }
 
+      set({
+        error: errorMessage,
+        loading: false,
+        transactions: [],
+      });
+    }
+  },
+
+  findById: async (id: string) => {
+    set({ loading: true, error: null });
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${API_URL}/admin/transaction/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      set({
+        transactions: response.data.data,
+        loading: false,
+      });
+    } catch (error) {
+      let errorMessage = "Error al obtener la transacción";
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || error.message;
+      }
       set({
         error: errorMessage,
         loading: false,
