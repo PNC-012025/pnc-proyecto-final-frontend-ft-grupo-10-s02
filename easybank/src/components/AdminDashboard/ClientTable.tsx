@@ -55,9 +55,19 @@ const ClientTable = () => {
           <span className="text-sm text-gray-600 font-medium">{row.id}</span>
           <button
             className="p-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-600 transition"
-            onClick={() => {
-              navigator.clipboard.writeText(row.id);
-              toast.success("ID copiado al portapapeles");
+            onClick={async () => {
+              if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+                try {
+                  await navigator.clipboard.writeText(row.id);
+                  toast.success("ID copiado al portapapeles");
+                } catch (err) {
+                  toast.error("No se pudo copiar el ID. Intenta de nuevo.");
+                  console.log(err);
+
+                }
+              } else {
+                toast.error("La función de copiar no es compatible con este navegador.");
+              }
             }}
             title="Copiar ID"
             type="button"
