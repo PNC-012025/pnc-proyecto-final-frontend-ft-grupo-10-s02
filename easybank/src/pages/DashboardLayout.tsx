@@ -3,6 +3,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 import { IoLogOut } from "react-icons/io5";
 import { FaWallet } from "react-icons/fa";
+import { FaMoneyBillTransfer } from "react-icons/fa6";
 
 
 import '../styles/Dashboard/DashboardLayout.css';
@@ -34,7 +35,7 @@ export const DashboardLayout = () => {
                 to="."
                 end
                 className={({ isActive }) =>
-                  `block lateral-link text-xs ${isActive ? 'text-green-500' : 'text-gray-500'}`
+                  `block lateral-link text-xs ${isActive ? 'text-green-500' : 'text-gray-300'}`
                 }
               >
                 <MdSpaceDashboard />
@@ -48,6 +49,18 @@ export const DashboardLayout = () => {
                 }
               >
                 <FaWallet />
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
+                to="transfer"
+                end
+                className={({ isActive }) =>
+                  `block lateral-link text-xs ${isActive ? 'text-green-500' : 'text-gray-300'}`
+                }
+              >
+                <FaMoneyBillTransfer />
               </NavLink>
             </li>
           </ul>

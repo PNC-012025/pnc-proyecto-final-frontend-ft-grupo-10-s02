@@ -1,5 +1,4 @@
 import { ExpenseType } from '../../types'
-import { MdModeEdit } from "react-icons/md";
 import { FaTrash } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
 
@@ -45,13 +44,6 @@ export const ExpenseItem = ({ expenseItem }: ExpenseItemProps) => {
                     title='Marcar como completado'
                 >
                     <FaCheck className='check-icon' />
-                </button>
-
-                <button
-                    className='btn-edit btn'
-                    onClick={() => console.log('ja')}
-                >
-                    <MdModeEdit className='edit-icon' />
                 </button>
 
                 <button

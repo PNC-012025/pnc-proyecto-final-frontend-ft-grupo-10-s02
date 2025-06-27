@@ -96,7 +96,7 @@ export const DashboardHome = () => {
                         </div>
                     </Fade>
 
-                    <Fade className='history-layout' direction='up'>
+                    <Fade className='history-layout' direction='up' triggerOnce={true}>
                         <div className='card-history'>
                             <div className='history-text'>
                                 <TbTextWrap className='h-i' />

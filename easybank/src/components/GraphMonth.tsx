@@ -159,7 +159,7 @@ export const GraphMonth = () => {
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+        <div className="graph-div grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
             <div className="bg-white p-4 rounded-xl shadow-md h-80 graph">
                 <Fade triggerOnce={true}>
                     <h2 className="text-xl font-semibold mb-4 text-gray-700">Saldo del día</h2>
@@ -167,14 +167,14 @@ export const GraphMonth = () => {
                 </Fade>
             </div>
 
-            <div className="bg-white p-4 rounded-xl shadow-md h-80 graph flex justify-center items-center gap-20">
+            <div className="bg-white p-4 rounded-xl shadow-md h-80 graph cir">
                 <Fade triggerOnce={true}>
                     <h2 className="text-xl font-semibold mb-4 text-gray-700 ml-10">Gastos por categoría</h2>
-                    <Pie data={pieData} />
+                    <Pie data={pieData} className='cir-f' />
                 </Fade>
             </div>
 
-            <div className="bg-white p-4 rounded-xl shadow-md h-80 graph">
+            <div className="bg-white p-4 rounded-xl shadow-md h-80 graph ingr">
                 <Fade triggerOnce={true}>
                     <h2 className="text-xl font-semibold mb-4 text-gray-700">Ingresos vs Gastos (hoy)</h2>
                     <Bar data={ingresosGastosData} />

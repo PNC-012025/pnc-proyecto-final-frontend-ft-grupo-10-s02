@@ -1,23 +1,19 @@
 .main-dash{
-    background-color: #e8e7e7dc;
+    background-color: #f4f4f4dc;
     padding: 30px;
     overflow-x: hidden;
     overflow-y: scroll;
 }
 
-.lateral-dash{
-    background-color: #e8e7e7dc;
-}
-
 .lateral{
-    box-shadow: 10px 10px 10px rgb(0, 0, 0, 0.05);
-    
+   
     display: flex;
     flex-direction: column;
 
     height: 100vh;
     justify-content: space-between;
     padding: 20px 10px;
+    background-color: white;
 }
 
 .icon-lat{

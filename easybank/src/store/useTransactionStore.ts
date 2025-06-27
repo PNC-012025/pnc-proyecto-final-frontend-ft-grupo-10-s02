@@ -17,7 +17,7 @@ interface Transaction {
   description: string | null;
   accountNumber: string;
   date: string;
-  type: "SENDER" | "RECEIVER";
+  type: string;
   name: string;
 }
 
@@ -72,6 +72,9 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
         headers: { Authorization: `Bearer ${token}` },
       };
       const res = await axios.get(`${API_BASE}/transaction/findown`, config);
+
+      console.log(res.data.data);
+      
 
       if (res.data?.data) {
         set({ transactions: res.data.data });

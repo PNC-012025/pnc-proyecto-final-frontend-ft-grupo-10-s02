@@ -1,6 +1,8 @@
 .dashboard {
     display: flex;
     overflow: hidden;
+    height: 100%;
+    padding-top: 70px;
 }
 
 .control-content {
@@ -9,7 +11,7 @@
 }
 
 .menu-icon {
-    color: #FFF;
+    color: #333;
     font-size: 40px;
     position: absolute;
     cursor: pointer;
@@ -139,6 +141,14 @@
 
 @media screen and (max-width: 900px) {
 
+    .dashboard{
+        height: initial;
+    }
+
+    .main-dash{
+        padding: 0;
+    }
+
     .list-content {
         margin-top: 0px;
         padding: 0 35px;
@@ -151,8 +161,7 @@
 
     .dashboard {
         flex-direction: column;
-        height: 100%;
-        padding-bottom: 100px;
+        height: initial;
     }
 
     .control-content {
@@ -208,5 +217,10 @@
     .list-content {
         margin-top: -50px;
         padding: 0 40px;
+    }
+
+
+    .main-dash{
+        padding: 0;
     }
 }
