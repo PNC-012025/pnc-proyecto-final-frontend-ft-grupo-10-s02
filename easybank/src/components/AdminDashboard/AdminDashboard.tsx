@@ -2,7 +2,6 @@ import { useState } from 'react';
 import ClientTable from './ClientTable';
 import AdminSidebar from './AdminSidebar';
 import TransactionSearch from './Transactions';
-import DepositClientTable from './DepositClientTable';
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -22,8 +21,6 @@ const AdminDashboard = () => {
         return <ClientTable />;
       case 'transacciones':
         return <TransactionSearch />;
-      case 'depositos':
-        return <DepositClientTable />;
       default:
         return <p className='italic'>Selecciona una opción del menú.</p>;
     }

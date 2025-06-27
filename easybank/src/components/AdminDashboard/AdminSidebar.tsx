@@ -4,7 +4,6 @@ import {
   FaTable,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { FaTableList } from "react-icons/fa6";
 
 interface SidebarProps {
   setActiveSection: (section: string) => void;
@@ -13,16 +12,14 @@ interface SidebarProps {
 const menuItems = [
   { name: "Usuarios", section: "usuarios", icon: <FaUser /> },
   { name: "Transacciones", section: "transacciones", icon: <FaTable /> },
-  { name: "Depósitos", section: "depositos", icon: <FaTableList /> },
 ];
 
 const AdminSidebar = ({ setActiveSection }: SidebarProps) => {
   const [active, setActive] = useState("usuarios");
 
-  // Llamar a setActiveSection con "usuarios" al montar el componente
   useEffect(() => {
     setActiveSection("usuarios");
-  }, []); // El array vacío asegura que solo se ejecute una vez al montar
+  }, []); // para que solo se monte una vez
 
   const handleClick = (section: string) => {
     setActive(section);
