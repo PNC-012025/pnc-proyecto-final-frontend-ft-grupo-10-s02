@@ -18,7 +18,7 @@ export const ExpDashboard = () => {
     const [showMenu, setShowMenu] = useState(false);
 
     const handleMenu = () => {
-        setShowMenu(true);
+        setShowMenu(!showMenu);
     }
 
     return (
@@ -29,6 +29,7 @@ export const ExpDashboard = () => {
             <IoIosMenu
                 className={`menu-icon ${showMenu && 'disable-menu'}`}
                 onClick={handleMenu}
+                
             />
 
             <div className="control-content">

@@ -1,18 +1,18 @@
-.transact-div{
+.transact-div {
     width: 70%;
     margin-bottom: 70px;
 }
 
-.contadores{
+.contadores {
     margin: 50px 0;
 }
 
-.reminders-section{
+.reminders-section {
 
     display: flex;
     gap: 30px;
 
-    .panel-agenda{
+    .panel-agenda {
         border-radius: 20px;
         width: 400px;
         padding: 20px;
@@ -22,28 +22,28 @@
         gap: 20px;
         height: 100%;
 
-        .pn-h{
+        .pn-h {
             font-size: 30px;
             border-bottom: 1px solid #c4c4c4;
         }
 
-        .pn-t{
+        .pn-t {
             font-size: 17px;
         }
 
-        .btn-pan{
+        .btn-pan {
             padding: 10px;
             border-radius: 30px;
             transition: all .5s;
             cursor: pointer;
 
-            &:hover{
+            &:hover {
                 scale: 1.05;
             }
         }
     }
 
-    .calendar{
+    .calendar {
         background-color: white;
         padding: 20px;
         border-radius: 20px;
@@ -52,13 +52,13 @@
     }
 }
 
-.cont-dv{
+.cont-dv {
     padding: 10px;
 }
 
 .modal-overlay {
-    background-color: rgba(0, 0, 0, 0.1); 
-    backdrop-filter: blur(2px); 
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(2px);
 }
 
 .modal-content {
@@ -69,7 +69,7 @@
     flex-direction: column;
 }
 
-.ag-h{
+.ag-h {
     font-weight: 600;
     font-size: 30px;
     margin-bottom: 25px;
@@ -77,21 +77,22 @@
     border-bottom: 1px solid #c4c4c4;
 }
 
-.ag-ti{
+.ag-ti {
     margin-bottom: 10px;
     font-size: 20px;
 }
 
-.ag-in{
+.ag-in {
     padding: 10px;
     border: 1px solid #c4c4c4;
 }
 
-.chang-ev{
-    padding: 10px ;
+.chang-ev {
+    padding: 10px;
 }
 
-.btn-can, .btn-ag{
+.btn-can,
+.btn-ag {
     margin-top: 10px;
     padding: 7px 50px;
     border-radius: 30px;
@@ -99,7 +100,7 @@
     cursor: pointer;
     transition: all .5s;
 
-    &:hover{
+    &:hover {
         scale: 1.05;
     }
 }
@@ -109,8 +110,28 @@
         opacity: 0;
         transform: scale(0);
     }
+
     to {
         opacity: 1;
         transform: scale(100%);
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    .tr-con{
+        padding: 20px;
+    }
+
+    .reminders-section {
+        flex-direction: column;
+
+        .calendar {
+            width: 100%;
+        }
+
+        .panel-agenda{
+            width: 100%;
+        }
     }
 }

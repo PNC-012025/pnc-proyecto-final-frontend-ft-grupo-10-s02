@@ -150,8 +150,8 @@ export const Transfer = () => {
 
     return (
         <>
-            <div className="">
-                <Fade className='history-layout' direction='down'>
+            <div className="tr-con">
+                <Fade className='history-layout' direction='down' triggerOnce={true}>
                     <div className='card-history'>
                         <div className='history-text'>
                             <TbTextWrap className='h-i' />
