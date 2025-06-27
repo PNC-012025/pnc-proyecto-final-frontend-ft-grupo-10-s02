@@ -6,10 +6,24 @@ import "../styles/Login/Login.css"
 
 import type { LoginFormData } from "../types"
 import { useEasyBankStore } from "../store/userStore"
+import { useEffect } from "react";
 
 export const Login = () => {
-    const { fetchLogin } = useEasyBankStore()
+    const { fetchLogin, isAuthenticated, isAdmin, userRoles } = useEasyBankStore()
     const navigate = useNavigate()
+
+    // para verificar si es o no es 
+    useEffect(() => {
+        if (isAuthenticated && userRoles.length > 0) {
+            if (isAdmin()) {
+                toast.success("Redirigiendo a panel de administrador...");
+                setTimeout(() => navigate("/admin"), 2000);
+            } else {
+                toast.success("Redirigiendo a dashboard de usuario...");
+                setTimeout(() => navigate("/dashboard"), 2000);
+            }
+        }
+    }, [isAuthenticated, isAdmin, userRoles, navigate]);
 
     const {
         register,
@@ -23,7 +37,6 @@ export const Login = () => {
             await fetchLogin(data)
             toast.success("Inicio de sesión exitoso")
             reset()
-            setTimeout(() => navigate("/dashboard"), 2000)
         } catch (error) {
             toast.error("Error al iniciar sesión")
         }
@@ -32,7 +45,7 @@ export const Login = () => {
     return (
         <>
             <ToastContainer
-            className={"toast"}
+                className={"toast"}
                 position="top-right"
                 autoClose={5000}
                 hideProgressBar={false}

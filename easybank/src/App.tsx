@@ -8,6 +8,9 @@ import { ExpDashboard } from "./components/ExpenseDashboard/ExpDashboard";
 
 import { ExpenseProvider } from "./context/ExpenseContext";
 import { ToastContainer } from "react-toastify";
+import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
+import { AdminPage } from "./pages/AdminPage";
+import AdminRoute from "./components/AdminDashboard/AdminRoute";
 
 function App() {
   return (
@@ -21,6 +24,11 @@ function App() {
           <Route index element={<DashboardHome />} />
           <Route path="home" element={<DashboardHome />} />
           <Route path="wallet" element={<ExpDashboard />} />
+        </Route>
+        <Route path="/admin" element={<AdminRoute>
+          <AdminPage />
+        </AdminRoute>}>
+          <Route index element={<AdminDashboard />} />
         </Route>
       </Routes>
 
