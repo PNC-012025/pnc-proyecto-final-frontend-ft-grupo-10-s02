@@ -58,11 +58,23 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       onSuccess?.();
       await fetchCardDetails();
       await useTransactionStore.getState().fetchTransactions();
-    } catch (error) {
-      toast.error("Error al enviar la transacción");
-      console.log(error);
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        const message =
+          error.response?.data?.data.message ||
+          error.response?.data?.data.error ||
+          error.response?.data.data ||
+          "Error desconocido en el servidor";
+
+        toast.error(`Error al enviar la transacción: ${message}`);
+        console.error("Error detalle:", error.response?.data);
+      } else {
+        toast.error("Error inesperado. Por favor, intenta de nuevo.");
+        console.error("Error desconocido:", error);
+      }
     }
   },
+
 
   fetchTransactions: async () => {
     try {
@@ -74,7 +86,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       const res = await axios.get(`${API_BASE}/transaction/findown`, config);
 
       console.log(res.data.data);
-      
+
 
       if (res.data?.data) {
         set({ transactions: res.data.data });

@@ -1,6 +1,5 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { MdSpaceDashboard } from "react-icons/md";
-import { IoMdSettings } from "react-icons/io";
 import { IoLogOut } from "react-icons/io5";
 import { FaWallet } from "react-icons/fa";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
@@ -66,16 +65,6 @@ export const DashboardLayout = () => {
           </ul>
 
           <ul className="space-y-4">
-            <li>
-              <NavLink
-                to="settings"
-                className={({ isActive }) =>
-                  `block lateral-link text-xl ${isActive ? 'text-green-500' : 'text-gray-300'}`
-                }
-              >
-                <IoMdSettings />
-              </NavLink>
-            </li>
             <li>
               <button
                 onClick={handleLogout}

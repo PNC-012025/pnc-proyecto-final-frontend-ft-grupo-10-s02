@@ -5,7 +5,7 @@ import type { RegisterFormData } from "../types"
 import { useEasyBankStore } from "../store/userStore"
 
 import "../styles/register/Register.css"
-    
+
 
 export const Register = () => {
 
@@ -21,20 +21,16 @@ export const Register = () => {
     } = useForm<RegisterFormData>()
 
     const onSubmit = async (data: RegisterFormData) => {
-    try {
-        await fetchRegister(data)
-        toast.success("Cuenta creada exitosamente")
-        reset()
-        setTimeout(() => {
-            navigate("/login")
-        }, 2000)
-    } catch (error: any) {
-        if (error?.message) {
-            toast.error("Error al registrar usuario")
-        } else {
-            toast.error("Error al registrar usuario")
+        try {
+            await fetchRegister(data)
+            toast.success("Cuenta creada exitosamente")
+            reset()
+            setTimeout(() => {
+                navigate("/login")
+            }, 2000)
+        } catch (error: any) {
+            console.log(error);
         }
-    }
     }
 
     const formatDUI = (value: string) => {
