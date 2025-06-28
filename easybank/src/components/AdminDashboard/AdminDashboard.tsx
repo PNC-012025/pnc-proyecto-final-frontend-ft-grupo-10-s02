@@ -3,6 +3,7 @@ import ClientTable from '../AdminUsers/ClientTable';
 import AdminSidebar from './AdminSidebar';
 import TransactionSearch from './Transactions';
 import DepositTable from '../AdminDeposit/DepositTable';
+import AdminBills from '../AdminBills/AdminBills';
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -24,6 +25,8 @@ const AdminDashboard = () => {
         return <TransactionSearch />;
       case 'cuentas':
         return <DepositTable />;
+      case 'facturas':
+        return <AdminBills />;
       default:
         return <p className='italic'>Selecciona una opción del menú.</p>;
     }
