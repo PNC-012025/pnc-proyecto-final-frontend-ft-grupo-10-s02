@@ -152,7 +152,7 @@ export const Transfer = () => {
         <>
             <div className="tr-con">
                 <Fade className='history-layout' direction='down' triggerOnce={true}>
-                    <div className='card-history'>
+                    <div className='card-history hs-tr'>
                         <div className='history-text'>
                             <TbTextWrap className='h-i' />
                             <p className='h-p'>Transacciones de la cuenta</p>
@@ -160,8 +160,7 @@ export const Transfer = () => {
 
                         {transactions
                             .slice()
-                            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                            .slice(0, 5)
+                            .reverse() 
                             .map(tx => (
                                 <div key={tx.id} className='history-text'>
                                     {tx.type === "RECEIVER" ? (

@@ -23,7 +23,7 @@ export const NavBar = ({ showMenu, setShowMenu }: NavBarProps) => {
 
     const expensetMoney = expenses.reduce((total, item) => total + item.amount, 0);
 
-    const { cardDetails } = useCardStore();
+    const cardDetails = useCardStore(state => state.cardDetails);;
     const balance = cardDetails?.balance ?? 0;
 
     const percentage = balance > 0 ? (expensetMoney / balance) * 100 : 0;
