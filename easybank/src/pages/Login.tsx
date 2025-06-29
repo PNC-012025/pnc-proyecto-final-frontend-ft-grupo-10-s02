@@ -35,7 +35,6 @@ export const Login = () => {
     const onSubmit = async (data: LoginFormData) => {
         try {
             await fetchLogin(data)
-            toast.success("Inicio de sesión exitoso")
             reset()
         } catch (error) {
             toast.error("Error al iniciar sesión")

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { ExpenseType } from '../types';
 import { useEasyBankStore } from './userStore';
+import { useCardStore } from './useCardStore';
 
 const API_BASE = import.meta.env.VITE_API_URL;
 type ExpenseStore = {
@@ -14,7 +15,7 @@ type ExpenseStore = {
     payExpense: (id: string) => Promise<void>;
 };
 
-const {fetchWhoami} = useEasyBankStore.getState()
+const { fetchWhoami } = useEasyBankStore.getState()
 
 export const useExpenseStore = create<ExpenseStore>((set) => ({
     expenses: [],
@@ -29,7 +30,11 @@ export const useExpenseStore = create<ExpenseStore>((set) => ({
         try {
             const res = await axios.get(`${API_BASE}/bill/findown`, config);
 
-            set({ expenses: res.data.data });
+            const filtered = Array.isArray(res.data.data)
+                ? res.data.data.filter((e: ExpenseType | null) => e !== null)
+                : [];
+
+            set({ expenses: filtered });
         } catch (error) {
             console.error(error);
         }
@@ -102,8 +107,8 @@ export const useExpenseStore = create<ExpenseStore>((set) => ({
         try {
             await axios.patch(`${API_BASE}/bill/pay/${id}`, {}, config);
 
-            await fetchWhoami()
-            await useExpenseStore.getState().deleteExpense(id);
+            await useExpenseStore.getState().fetchExpenses();   
+            await useCardStore.getState().fetchCardDetails();
         } catch (error) {
             console.error(error);
         }

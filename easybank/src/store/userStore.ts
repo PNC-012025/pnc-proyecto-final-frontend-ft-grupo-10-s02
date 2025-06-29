@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { RegisterInput, LoginInput } from "../schema/user-schema";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 type UserRole = "ROLE_USER" | "ROLE_ADMIN";
 
@@ -29,9 +30,23 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
   fetchRegister: async (data) => {
     try {
       const response = await axios.post(`${API_URL}/auth/register`, data);
+      toast.success("Usuario registrado correctamente");
       console.log("Usuario registrado:", response.data);
-    } catch (error) {
-      console.log("Error al registrar al usuario", error);
+    } catch (error: any) {
+      let errorMessage = "Error al registrar al usuario";
+
+      if (axios.isAxiosError(error)) {
+        if (error.response?.data?.data.message) {
+          errorMessage = error.response.data.data.message;
+        } else if (error.response?.data?.data.error) {
+          errorMessage = error.response.data.data.error;
+        } else if (error.response?.data?.data.errors) {
+          errorMessage = Object.values(error.response.data.data.errors).join(" | ");
+        }
+      }
+
+      toast.error(errorMessage);
+      console.error("Error al registrar usuario:", error);
       throw error;
     }
   },
@@ -39,6 +54,7 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
   fetchLogin: async (data) => {
     try {
       const response = await axios.post(`${API_URL}/auth/login`, data);
+      toast.success("Inicio de sesión exitoso");
       console.log("Inicio de sesión exitoso.", response.data);
 
       const token = response.data.data.token;
@@ -50,11 +66,25 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
       });
 
       await get().fetchWhoami();
-    } catch (error) {
-      console.log("Error al iniciar sesión", error);
+    } catch (error: any) {
+      let errorMessage = "Error al iniciar sesión";
+
+      if (axios.isAxiosError(error)) {
+        if (error.response?.data?.data.message) {
+          errorMessage = error.response.data.data.message;
+        } else if (error.response?.data?.data.error) {
+          errorMessage = error.response.data.data.error;
+        } else if (error.response?.data?.data.errors) {
+          errorMessage = Object.values(error.response.data.data.errors).join(" | ");
+        }
+      }
+
+      toast.error(errorMessage);
+      console.error("Error al iniciar sesión:", error);
       throw error;
     }
   },
+
 
   fetchWhoami: async () => {
     try {

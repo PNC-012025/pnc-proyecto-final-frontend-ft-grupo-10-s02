@@ -61,7 +61,7 @@ export const TransactionPopup = () => {
                   <input
                     {...register('firstName', { required: 'Nombre es obligatorio' })}
                     type="text"
-                    placeholder="Escribe tu nombre"
+                    placeholder="Nombre del destinatario"
                   />
                   {errors.firstName && <p className="error-msg">{errors.firstName.message}</p>}
                 </div>
@@ -71,7 +71,7 @@ export const TransactionPopup = () => {
                   <input
                     {...register('lastName', { required: 'Apellido es obligatorio' })}
                     type="text"
-                    placeholder="Escribe tu apellido"
+                    placeholder="Apellido del destinatario"
                   />
                   {errors.lastName && <p className="error-msg">{errors.lastName.message}</p>}
                 </div>
@@ -102,7 +102,7 @@ export const TransactionPopup = () => {
                     })}
                     type="text"
                     maxLength={12}
-                    placeholder="Ej: 123456789"
+                    placeholder="Número de cuenta a enviar Ej: 123456789"
                   />
                   {errors.accountNumber && <p className="error-msg">{errors.accountNumber.message}</p>}
                 </div>

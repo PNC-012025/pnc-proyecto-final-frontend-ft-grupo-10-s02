@@ -323,7 +323,7 @@ const ClientTable = () => {
               placeholder="Buscar cliente..."
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
-              className="pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64 text-gray-700"
+              className="btn-admin-bar pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full md:w-64 text-gray-700"
             />
             <div className="absolute left-3 top-3 text-gray-400">
             </div>
