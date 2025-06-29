@@ -80,7 +80,7 @@ EasyBank es una aplicación de banca en línea y gestión financiera personal. E
 
 - **Input de búsqueda** en cada panel para filtrar por nombre de usuario
 - Interfaz responsiva y animaciones fluidas
-- Soporte para múltiples monedas
+- Soporte para conversión de monedas
 
 ---
 
