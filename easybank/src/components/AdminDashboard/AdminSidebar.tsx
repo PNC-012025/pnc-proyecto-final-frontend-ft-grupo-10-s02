@@ -5,6 +5,8 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
+import '../../styles/AdminStyle.css'
+
 interface SidebarProps {
   setActiveSection: (section: string) => void;
 }
@@ -38,12 +40,12 @@ const AdminSidebar = ({ setActiveSection }: SidebarProps) => {
         <img
           src="./logo.svg"
           alt="Logo"
-          className="w-full h-auto max-h-16 object-contain"
+          className="w-full h-auto max-h-16 object-contain img-admin"
         />
       </div>
 
       {/* Navegación como botones visuales */}
-      <nav className="flex-1 w-full px-4 py-5 flex flex-col items-center gap-6 justify-self-auto relative">
+      <nav className="flex-1 w-full px-4 py-5 flex flex-col items-center gap-6 justify-self-auto relative nav-admin">
         {menuItems.map((item) => (
           <button
             key={item.section}
@@ -56,7 +58,7 @@ const AdminSidebar = ({ setActiveSection }: SidebarProps) => {
         transition-all duration-200
         border-2
         focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
-        relative
+        relative cursor-pointer
         ${active === item.section
                 ? "bg-blue-600 text-white shadow-inner border-blue-700"
                 : "bg-white text-gray-700 hover:bg-gray-50 border-gray-200 shadow-sm hover:shadow-md"
@@ -74,14 +76,14 @@ const AdminSidebar = ({ setActiveSection }: SidebarProps) => {
       </nav>
 
       {/* Botón de salir */}
-      <div className="mx-4 mt-8 mb-6 w-full max-w-xs md:max-w-md">
+      <div className="mx-4 mt-8 mb-6 w-full max-w-xs md:max-w-md nav-admin">
         <button
           onClick={handleLogout}
           className="flex items-center justify-center gap-4 w-full
               bg-emerald-600 hover:bg-red-700 text-white
               py-3 rounded-xl text-xl font-medium shadow-lg
               transition-all duration-300 transform hover:scale-[1.02]
-              border-2 border-emerald-700/20">
+              border-2 border-emerald-700/20 btn-admin-bar">
           <FaSignOutAlt />
           Cerrar sesión
         </button>

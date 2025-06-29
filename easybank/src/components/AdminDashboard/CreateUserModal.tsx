@@ -53,7 +53,7 @@ const CreateUserModal = () => {
 			{/* Botón para abrir el modal */}
 			<button
 				onClick={handleOpen}
-				className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-500 text-white px-5 py-2.5 rounded-lg hover:from-indigo-700 hover:to-blue-600 transition-all duration-300 shadow hover:shadow-lg font-medium focus:ring-2 focus:ring-blue-300 focus:outline-none"
+				className="btn-admin-new flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-blue-500 text-white px-5 py-2.5 rounded-lg hover:from-indigo-700 hover:to-blue-600 transition-all duration-300 shadow hover:shadow-lg font-medium focus:ring-2 focus:ring-blue-300 focus:outline-none"
 			>
 				<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
 					<path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
@@ -101,7 +101,7 @@ const CreateUserModal = () => {
 											className={`w-full px-4 py-2.5 rounded-lg border ${errors.username ?
 												"border-red-300 focus:ring-2 focus:ring-red-200 focus:border-red-500" :
 												"border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-												} transition-colors`}
+												} transition-colors in-admin-us`}
 											placeholder="john_doe"
 											onBlur={() => trigger("username")}
 										/>
@@ -126,7 +126,7 @@ const CreateUserModal = () => {
 												className={`w-full px-4 py-2.5 rounded-lg border ${errors.firstName ?
 													"border-red-300 focus:ring-2 focus:ring-red-200 focus:border-red-500" :
 													"border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-													} transition-colors`}
+													} transition-colors in-admin-us`}
 												placeholder="John"
 												onBlur={() => trigger("firstName")}
 											/>
@@ -144,7 +144,7 @@ const CreateUserModal = () => {
 												className={`w-full px-4 py-2.5 rounded-lg border ${errors.lastName ?
 													"border-red-300 focus:ring-2 focus:ring-red-200 focus:border-red-500" :
 													"border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-													} transition-colors`}
+													} transition-colors in-admin-us`}
 												placeholder="Doe"
 												onBlur={() => trigger("lastName")}
 											/>
@@ -164,7 +164,7 @@ const CreateUserModal = () => {
 											className={`w-full px-4 py-2.5 rounded-lg border ${errors.dui ?
 												"border-red-300 focus:ring-2 focus:ring-red-200 focus:border-red-500" :
 												"border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-												} transition-colors`}
+												} transition-colors in-admin-us`}
 											placeholder="00000000-0"
 											onBlur={() => trigger("dui")}
 										/>
@@ -183,7 +183,7 @@ const CreateUserModal = () => {
 											className={`w-full px-4 py-2.5 rounded-lg border ${errors.email ?
 												"border-red-300 focus:ring-2 focus:ring-red-200 focus:border-red-500" :
 												"border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-												} transition-colors`}
+												} transition-colors in-admin-us`}
 											placeholder="correo@ejemplo.com"
 											onBlur={() => trigger("email")}
 										/>
@@ -203,7 +203,7 @@ const CreateUserModal = () => {
 											className={`w-full px-4 py-2.5 rounded-lg border ${errors.password ?
 												"border-red-300 focus:ring-2 focus:ring-red-200 focus:border-red-500" :
 												"border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500"
-												} transition-colors`}
+												} transition-colors in-admin-us`}
 											placeholder="••••••••"
 											onBlur={() => trigger("password")}
 										/>
@@ -220,7 +220,7 @@ const CreateUserModal = () => {
 										disabled={isSubmitting}
 										className={`w-full py-2.5 text-white rounded-lg transition motion-btn flex items-center justify-center gap-2 ${isSubmitting
 											? "bg-indigo-400 cursor-not-allowed"
-											: "bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600"
+											: "bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 "
 											}`}
 									>
 										{isSubmitting ? (
