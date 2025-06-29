@@ -82,7 +82,7 @@ const DepositPopup: React.FC<DepositPopupProps> = ({
 										type="text"
 										value={userId}
 										disabled
-										className="w-full px-4 py-2.5 rounded-lg bg-gray-100 border border-gray-300 cursor-not-allowed text-gray-500"
+										className="in-admin-us w-full px-4 py-2.5 rounded-lg bg-gray-100 border border-gray-300 cursor-not-allowed text-gray-500"
 									/>
 								</div>
 
@@ -99,7 +99,7 @@ const DepositPopup: React.FC<DepositPopupProps> = ({
 											value={selectedAccountId}
 											onChange={(e) => setSelectedAccountId(e.target.value)}
 											required
-											className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+											className="in-admin-us w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
 										>
 											<option value="">Seleccione una cuenta</option>
 											{accounts.map((acc) => (
@@ -116,14 +116,14 @@ const DepositPopup: React.FC<DepositPopupProps> = ({
 										Monto <span className="text-red-500">*</span>
 									</label>
 									<div className="relative">
-										<span className="absolute left-3 top-3 text-gray-400">$</span>
+										<span className="absolute left-3 top-3 text-gray-400"></span>
 										<input
 											type="number"
 											value={amount}
 											onChange={(e) => setAmount(e.target.value)}
 											required
 											min="1"
-											className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+											className="in-admin-us w-full pl-8 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
 											placeholder="0.00"
 										/>
 									</div>
@@ -138,7 +138,7 @@ const DepositPopup: React.FC<DepositPopupProps> = ({
 										value={description}
 										onChange={(e) => setDescription(e.target.value)}
 										required
-										className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
+										className="in-admin-us w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-500"
 										placeholder="Detalle del depósito"
 									/>
 								</div>
@@ -168,7 +168,7 @@ const DepositPopup: React.FC<DepositPopupProps> = ({
 									<button
 										type="button"
 										onClick={onClose}
-										className="w-full py-2.5 bg-gray-100 text-gray-700 rounded-lg transition motion-cancel"
+										className="w-full py-2.5 bg-gray-100 text-white rounded-lg transition motion-cancel"
 										disabled={loadingDeposit}
 									>
 										Cancelar

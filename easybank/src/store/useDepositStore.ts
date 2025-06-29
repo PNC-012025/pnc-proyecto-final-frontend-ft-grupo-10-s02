@@ -17,12 +17,12 @@ export const useDepositStore = create<DepositStoreState>((set) => ({
   error: null,
   success: false,
 
-  deposit: async ({ accountId, amount, description }) => {
+  deposit: async ({ userId, accountId, amount, description }) => {
     set({ loading: true, error: null, success: false });
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `${API_URL}/admin/userlist/deposit`,
+        `${API_URL}/admin/userlist/${userId}/deposit`,
         { accountId, amount, description },
         {
           headers: {
