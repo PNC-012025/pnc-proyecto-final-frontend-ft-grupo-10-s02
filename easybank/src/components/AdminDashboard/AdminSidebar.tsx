@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react"; // Importar useEffect
 import {
   FaUser,
-  FaTable,
   FaSignOutAlt,
+  FaRegFileArchive,
 } from "react-icons/fa";
+import { FaMoneyBillTransfer, FaTableColumns, } from "react-icons/fa6";
 
 import '../../styles/AdminStyle.css'
 
@@ -13,7 +14,9 @@ interface SidebarProps {
 
 const menuItems = [
   { name: "Usuarios", section: "usuarios", icon: <FaUser /> },
-  { name: "Transacciones", section: "transacciones", icon: <FaTable /> },
+  { name: "Transacciones", section: "transacciones", icon: <FaMoneyBillTransfer /> },
+  { name: "Cuentas", section: "cuentas", icon: <FaTableColumns /> },
+  { name: "Facturas", section: "facturas", icon: <FaRegFileArchive /> },
 ];
 
 const AdminSidebar = ({ setActiveSection }: SidebarProps) => {

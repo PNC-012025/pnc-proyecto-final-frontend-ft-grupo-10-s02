@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useAdminTransStore } from '../../store/useAdminTransStore';
+import { useEffect, useState } from "react";
+import { useAdminTransStore } from "../../store/useAdminTransStore";
 
 const TransactionSearch = () => {
 	const { transactions, loading, error, fetchTransactions, findById } = useAdminTransStore();
-	const [searchId, setSearchId] = useState('');
+	const [searchId, setSearchId] = useState("");
 
 	useEffect(() => {
 		fetchTransactions();
 	}, [fetchTransactions]);
 
 	const handleSearch = async () => {
-		if (searchId.trim() === '') {
+		if (searchId.trim() === "") {
 			fetchTransactions();
 		} else {
 			await findById(searchId.trim());
@@ -23,25 +23,26 @@ const TransactionSearch = () => {
 				<div className="flex justify-between items-center">
 					<div>
 						<h1 className="text-2xl font-bold text-gray-800">Transacciones</h1>
-						<p className="text-gray-500 mt-1">
-							Se muestran todas las transacciones registradas
-						</p>
+						<p className="text-gray-500 mt-1">Se muestran todas las transacciones registradas</p>
 					</div>
-					<svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
 					</svg>
 				</div>
+
 				<div className="mt-4 flex gap-2">
 					<input
 						type="text"
 						placeholder="Buscar por ID de Transacción"
-						className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+						className="in-admin-us w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm text-gray-700"
 						value={searchId}
 						onChange={(e) => setSearchId(e.target.value)}
-						onKeyDown={e => { if (e.key === 'Enter') handleSearch(); }}
+						onKeyDown={(e) => {
+							if (e.key === "Enter") handleSearch();
+						}}
 					/>
 					<button
-						className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+						className="in-admin-us px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
 						onClick={handleSearch}
 					>
 						Buscar
@@ -50,7 +51,7 @@ const TransactionSearch = () => {
 			</div>
 
 			{error && (
-				<div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg">
+				<div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg border border-red-200">
 					{error}
 				</div>
 			)}
@@ -65,36 +66,36 @@ const TransactionSearch = () => {
 				</div>
 			) : transactions.length > 0 ? (
 				<div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
-					<h2 className="px-6 pt-6 pb-2 text-lg font-semibold text-blue-700">Transacciones</h2>
+					<h2 className="px-6 pt-6 pb-2 text-lg font-semibold text-blue-700">Lista de transacciones</h2>
 					<div className="overflow-x-auto">
-						<table className="min-w-full divide-y divide-gray-200">
-							<thead className="bg-gray-50">
+						<table className="min-w-full divide-y divide-gray-200 text-sm text-left">
+							<thead className="bg-gray-50 text-gray-600 uppercase text-xs">
 								<tr>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Monto</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cuenta Origen</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titular Origen</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cuenta Destino</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titular Destino</th>
+									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">ID</th>
+									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Monto</th>
+									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Fecha</th>
+									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Cuenta Origen</th>
+									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Titular Origen</th>
+									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Cuenta Destino</th>
+									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Titular Destino</th>
 								</tr>
 							</thead>
-							<tbody className="bg-white divide-y divide-gray-200">
-								{transactions.map((transaction) => (
-									<tr key={transaction.transactionId} className="hover:bg-gray-50">
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">{transaction.transactionId.slice(0, 8)}...</td>
-										<td className="px-6 py-4 whitespace-nowrap">
-											<span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-												${Number(transaction.amount).toFixed(2)}
+							<tbody className="in-admin-us divide-y divide-gray-100 bg-white">
+								{transactions.map((t) => (
+									<tr key={t.transactionId} className="hover:bg-blue-50 transition">
+										<td className="px-6 py-4 font-mono text-gray-700">{t.transactionId.slice(0, 8)}...</td>
+										<td className="px-6 py-4">
+											<span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+												${Number(t.amount).toFixed(2)}
 											</span>
 										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{transaction.date ? new Date(transaction.date).toLocaleString() : ''}
+										<td className="px-6 py-4 text-gray-600">
+											{t.date ? new Date(t.date).toLocaleString() : ""}
 										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.originAccount.accountNumber}</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.originAccount.accountOwner}</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.destinationAccount.accountNumber}</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{transaction.destinationAccount.accountOwner}</td>
+										<td className="in-admin-us px-6 py-4 text-gray-600">{t.originAccount.accountNumber}</td>
+										<td className="in-admin-us px-6 py-4 text-gray-600">{t.originAccount.accountOwner}</td>
+										<td className="in-admin-us px-6 py-4 text-gray-600">{t.destinationAccount.accountNumber}</td>
+										<td className="in-admin-us px-6 py-4 text-gray-600">{t.destinationAccount.accountOwner}</td>
 									</tr>
 								))}
 							</tbody>
@@ -102,15 +103,12 @@ const TransactionSearch = () => {
 					</div>
 				</div>
 			) : (
-				<div className="py-12 text-center">
-					<h3 className="text-lg font-medium text-gray-700">
-						{error ? "Error en la carga" : "No se encontraron transacciones"}
-					</h3>
-					<p className="text-gray-500 mt-1">
-						{error
-							? "Por favor intente nuevamente"
-							: "No hay transacciones registradas"}
-					</p>
+				<div className="py-12 text-center text-gray-600">
+					<svg className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+					<h3 className="text-lg font-medium">No se encontraron transacciones</h3>
+					<p className="text-gray-500 mt-1">Intenta con otro ID o revisa si hay datos registrados</p>
 				</div>
 			)}
 		</div>

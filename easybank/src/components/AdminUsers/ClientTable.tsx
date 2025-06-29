@@ -23,7 +23,7 @@ const ClientTable = () => {
   const [filterText, setFilterText] = useState("");
   const [showDetails, setShowDetails] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
 
   const [showRolePopup, setShowRolePopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState<{ id: string, role: string, name: string } | null>(null);
@@ -33,7 +33,6 @@ const ClientTable = () => {
     loading,
     error,
     fetchAllUsers,
-    //getUserById,
     deleteUser,
     updateUserRole,
   } = useAdminStore();
@@ -242,7 +241,7 @@ const ClientTable = () => {
               <>
                 <button
                   className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition"
-                  onClick={() => setShowDeletePopup(true)}
+                  onClick={() => setDeleteUserId(row.id)}
                   title="Eliminar usuario"
                 >
                   <svg
@@ -262,14 +261,20 @@ const ClientTable = () => {
                 </button>
 
                 <DeleteUserPopup
-                  isOpen={showDeletePopup}
-                  onClose={() => setShowDeletePopup(false)}
+                  isOpen={!!deleteUserId}
+                  onClose={() => setDeleteUserId(null)}
                   onConfirm={async () => {
-                    await deleteUser(row.id);
-                    toast.success("Usuario eliminado correctamente");
-                    setShowDeletePopup(false);
+                    if (deleteUserId) {
+                      await deleteUser(deleteUserId);
+                      toast.success("Usuario eliminado correctamente");
+                      setDeleteUserId(null);
+                    }
                   }}
-                  userName={`${row.first_name} ${row.last_name}`}
+                  userName={
+                    users.find(u => u.id === deleteUserId)
+                      ? `${users.find(u => u.id === deleteUserId)!.first_name} ${users.find(u => u.id === deleteUserId)!.last_name}`
+                      : ""
+                  }
                 />
               </>
             )
