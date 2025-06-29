@@ -14,27 +14,28 @@ const AdminBills = () => {
 
 	return (
 		<div className="w-full h-full px-6 py-8 bg-gray-50 rounded-2xl shadow-sm">
-			<div className="mb-6 flex flex-col md:flex-row md:items-center justify-between">
+			<div className="mb-6 flex flex-col md:flex-row md:items-end gap-4">
 				<div>
 					<h1 className="text-2xl font-bold text-gray-800">Facturas de Usuario</h1>
 					<p className="text-gray-500 mt-1">Busca y visualiza las facturas de un usuario por su ID</p>
 				</div>
-				<div className="flex gap-2 mt-4 md:mt-0">
-					<input
-						type="text"
-						placeholder="ID de usuario"
-						className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-						value={searchId}
-						onChange={e => setSearchId(e.target.value)}
-						onKeyDown={e => { if (e.key === 'Enter') handleSearch(); }}
-					/>
-					<button
-						className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-						onClick={handleSearch}
-					>
-						Buscar
-					</button>
-				</div>
+
+			</div>
+			<div className="flex gap-2 mt-4 md:mt-0">
+				<input
+					type="text"
+					placeholder="ID de usuario"
+					className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+					value={searchId}
+					onChange={e => setSearchId(e.target.value)}
+					onKeyDown={e => { if (e.key === 'Enter') handleSearch(); }}
+				/>
+				<button
+					className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+					onClick={handleSearch}
+				>
+					Buscar
+				</button>
 			</div>
 
 			{loading && (
