@@ -4,7 +4,6 @@ import { Fade } from 'react-awesome-reveal'
 import { FaGithub, FaMoneyBill, FaCoffee, FaHome, FaPlay } from "react-icons/fa";
 
 import { useExpense } from '../../hooks/useExpense';
-import { useNavigate } from 'react-router-dom';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

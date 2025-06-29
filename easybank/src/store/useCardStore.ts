@@ -15,6 +15,9 @@ interface CardStore {
   clearCardDetails: () => void;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 //funcion de limpiar
 export const useCardStore = create<CardStore>()(
   persist(
@@ -35,7 +38,7 @@ export const useCardStore = create<CardStore>()(
           if (!token) throw new Error("Token no encontrado");
 
           const response = await axios.post(
-            "http://localhost:8080/api/card/create",
+            `${API_URL}/card/create`,
             {},
             {
               headers: { Authorization: `Bearer ${token}` },
@@ -62,7 +65,7 @@ export const useCardStore = create<CardStore>()(
           if (!token) throw new Error("Token no encontrado");
 
           const response = await axios.get(
-            "http://localhost:8080/api/account/findown",
+            `${API_URL}/account/findown`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
