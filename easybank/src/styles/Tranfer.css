@@ -1,0 +1,137 @@
+.transact-div {
+    width: 70%;
+    margin-bottom: 70px;
+}
+
+.contadores {
+    margin: 50px 0;
+}
+
+.reminders-section {
+
+    display: flex;
+    gap: 30px;
+
+    .panel-agenda {
+        border-radius: 20px;
+        width: 400px;
+        padding: 20px;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: 100%;
+
+        .pn-h {
+            font-size: 30px;
+            border-bottom: 1px solid #c4c4c4;
+        }
+
+        .pn-t {
+            font-size: 17px;
+        }
+
+        .btn-pan {
+            padding: 10px;
+            border-radius: 30px;
+            transition: all .5s;
+            cursor: pointer;
+
+            &:hover {
+                scale: 1.05;
+            }
+        }
+    }
+
+    .calendar {
+        background-color: white;
+        padding: 20px;
+        border-radius: 20px;
+        width: 70%;
+        height: 100%;
+    }
+}
+
+.cont-dv {
+    padding: 10px;
+}
+
+.modal-overlay {
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(2px);
+}
+
+.modal-content {
+    padding: 20px;
+    border-radius: 20px;
+    animation: popup-fade 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.ag-h {
+    font-weight: 600;
+    font-size: 30px;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #c4c4c4;
+}
+
+.ag-ti {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.ag-in {
+    padding: 10px;
+    border: 1px solid #c4c4c4;
+}
+
+.chang-ev {
+    padding: 10px;
+}
+
+.btn-can,
+.btn-ag {
+    margin-top: 10px;
+    padding: 7px 50px;
+    border-radius: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .5s;
+
+    &:hover {
+        scale: 1.05;
+    }
+}
+
+@keyframes popup-fade {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(100%);
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    .tr-con{
+        padding: 20px;
+    }
+
+    .reminders-section {
+        flex-direction: column;
+
+        .calendar {
+            width: 100%;
+        }
+
+        .panel-agenda{
+            width: 100%;
+        }
+    }
+}

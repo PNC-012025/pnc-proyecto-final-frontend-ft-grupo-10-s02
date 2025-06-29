@@ -1,0 +1,30 @@
+.nav-admin{
+    padding: 20px;
+}
+
+.img-admin{
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 60%;
+}
+
+.btn-admin-bar{
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.btn-admin-new{
+    margin-right: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.in-admin-us{
+    padding: 10px;
+}
+
+.icon-deposito{
+    display: block;
+    margin: 0 auto;
+}

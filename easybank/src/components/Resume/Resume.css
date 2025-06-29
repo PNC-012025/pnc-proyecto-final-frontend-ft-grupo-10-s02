@@ -1,0 +1,202 @@
+.resume-panel{
+    width: 450px;
+    height: 300px;
+    background-color: #fff;
+    border-radius: 20px;
+
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+    margin-left: 0px;
+    margin-top: -50px;
+}
+
+.resume-title{
+    color: #223046;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-bottom: 1px solid #cdcdcd;
+}
+
+.cards-resume{
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bg-ico{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.cards-1, .cards-2{
+    display: flex;
+    gap: 20px;
+}
+
+.card{
+    padding: 0px;
+    border-radius: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3C3C3C;
+    width: 45%;
+    gap: 5px;
+
+    .icon-card{
+        background-color: #1B1B1B;
+        font-size: 60px;
+        padding: 10px;
+        border-radius: 7px;
+        color: white;
+    }
+
+    .prg{
+        font-size: 20px;
+        font-weight: bold;
+        margin-left: -15px;
+    }
+
+    .number{
+        padding-right: 20px;
+        font-size: 30px;
+    }
+}
+
+.card-saving{
+    background-color: #DBFCE7;
+    border: 2px solid #25a044;
+    .icon-card{
+        background-color: #DBFCE7; 
+        color: #25a044;
+    }
+    .prg-saving{
+        color: #25a044;
+    }
+    .number-saving{
+        color: #25a044;
+    }
+}
+
+.card-hl{
+    background-color: #FFE2E2;
+    border: 2px solid #bd2326;
+    .icon-card{
+        background-color: #FFE2E2; 
+        color: #bd2326;
+    }
+    .prg-hl{
+        color: #bd2326;
+    }
+    .number-hl{
+        color: #bd2326;
+    }
+}
+
+.card-home{
+    background-color: #DBEAFE;
+    border: 2px solid #0021B4;
+    .icon-card{
+        background-color: #DBEAFE; 
+        color: #0021B4;
+    }
+    .prg-home{
+        color: #0021B4;
+    }
+    .number-home{
+        color: #0021B4;
+    }
+}
+
+.card-pl{
+    background-color: #EDD3ED;
+    border: 2px solid #C544C7;
+
+    .icon-card{
+        background-color: #EDD3ED; 
+        color: #C544C7;
+    }
+    .prg-pl{
+        color: #C544C7;
+    }
+    .number-pl{
+        color: #C544C7;
+    }
+}
+
+@media screen and (max-width: 1470px){
+    .resume-panel{
+        width: 100%;
+    }
+
+    .card{
+        .prg{
+            font-size: 16px;
+        }
+    }
+}
+
+@media screen and (max-width: 1370px){
+    .resume-panel{
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 900px){
+
+    .cards-resume{
+        width: 100%;
+        height: 100%;
+        padding: 50px 30px 0;
+        padding-right: 40px;
+    }
+
+    .card{
+        gap: 20px;
+        .icon-card{
+            font-size: 40px;
+        }
+        .number{
+            font-size: 20px;
+        }
+    }
+}
+
+
+@media screen and (max-width: 900px){
+
+    .resume-panel{
+        overflow: hidden;
+        height: 100%;
+        margin-bottom: 50px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cards-resume{
+        padding: 20px;
+        padding-bottom: 70px;
+        overflow-y: scroll;
+    }
+
+    .card{
+        width: 100%;
+    }
+
+    .cards-1, .cards-2{
+        width: 100%;
+        flex-direction: column;
+    }
+}
+
+
+@media screen and (max-width: 600px){
+    .resume-panel{
+        width: 100%;
+        height: 50%;
+        margin-top: -70px;
+        margin-bottom: 50px;
+    }
+}

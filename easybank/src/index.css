@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+*{
+  margin: 0;  
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+.motion{
+  padding: 30px;
+}
+
+.motion-btn, .motion-cancel{
+  margin-top: 20px;
+  padding: 7px;
+}
+
+.motion-cancel{
+  background: #131825;
+}
+
+.motion-header{
+  margin-bottom: 10px;
+}

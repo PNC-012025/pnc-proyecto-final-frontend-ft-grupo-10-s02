@@ -1,0 +1,47 @@
+.main-dash{
+    background-color: #f4f4f4dc;
+    padding: 30px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.lateral{
+   
+    display: flex;
+    flex-direction: column;
+
+    height: 100vh;
+    justify-content: space-between;
+    padding: 20px 10px;
+    background-color: white;
+}
+
+.icon-lat{
+    display: block;
+    margin: 0 auto;
+    padding-left: 10px;
+    margin-bottom: 30px;
+}
+
+.lateral-link{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 30px;
+    transition: all .5s;
+}
+
+
+.out{
+    color: rgb(84, 84, 100);
+    display: block;
+    margin: 0 auto;
+    transition: all .5s;
+
+    &:hover{
+        color: rgb(229, 63, 63);
+    }
+}
+

@@ -1,0 +1,147 @@
+
+
+.login-container{
+    display: flex;
+    margin: 0;
+}
+
+.login-content-1{
+    width: 50%;
+    height: 100vh;
+    background-image: url("/login-img.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50%;
+}
+
+.login-content-2{
+    width: 50%;
+}
+
+.login-logo{
+    width: 300px;
+}
+
+.login-form {
+    margin: 0 auto;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .login-logo{
+        margin-bottom: 50px;
+    }
+
+    .login-field {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+        width: 100%;
+
+        .login-label{
+            margin-bottom: 5px;
+            font-size: 19px;
+            margin-left: 10px;
+        }
+
+        .login-input {
+            border: 1px solid #c6c4c4;
+            padding: 9px 20px;
+            width: 100%;
+            border-radius: 50px;
+        }
+
+        .name{
+            width: 100%;
+        }
+    }
+}
+
+.login-reg{
+    color: rgb(39, 108, 193);
+    margin-bottom: 20px;
+}
+
+.login-btns{
+    display: flex;
+    gap: 30px;
+}
+
+.login-cta{
+    background-color: #1bb84f;
+    color: white;
+    padding: 10px 70px;
+    border-radius: 50px;
+    transition: all .5s;
+    height: 45px;
+    text-align: center;
+    width: 200px;
+
+    &:hover{
+        transform: scale(1.05);
+        background-color: #0c7d31;
+        cursor: pointer;
+    }
+}
+
+.login-back{
+    background-color: #022434;
+    &:hover{
+        background-color: black;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+
+    .login-btns {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+
+    .login-cta {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    .login-logo{
+        margin-right: 70px;
+    }
+
+    .login-content-1{
+        display: none;
+    }
+    .login-content-2{
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        margin-top: 00px;
+    }
+
+    .login-form{
+        width: 90%;
+        
+        .par{
+            flex-direction: column;
+            width: 100%;
+            gap: 10px;
+        }
+    
+    }
+
+    .login-btns{
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+
+    .login-cta{
+        width: 100%;
+        text-align: center;
+    }
+}
