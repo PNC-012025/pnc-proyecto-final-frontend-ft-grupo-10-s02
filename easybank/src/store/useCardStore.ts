@@ -11,7 +11,7 @@ interface CardStore {
   cardDetails: CardDetails | null;
   setPopupOpen: (open: boolean) => void;
   activateCard: () => Promise<void>;
-  fetchCardDetails: () => Promise<void>;
+  fetchCardDetails: () => Promise<CardDetails>;
   clearCardDetails: () => void;
 }
 
@@ -59,7 +59,7 @@ export const useCardStore = create<CardStore>()(
         }
       },
 
-      fetchCardDetails: async () => {
+      fetchCardDetails: async (): Promise<CardDetails> => {
         try {
           const token = localStorage.getItem("token");
           if (!token) throw new Error("Token no encontrado");
@@ -71,15 +71,30 @@ export const useCardStore = create<CardStore>()(
             }
           );
 
-          console.log(response.data.data);
+          console.log("RESPUESTA API:", response.data);
+
+          if (!response.data.data) {
+            set({ cardDetails: null });
+            return Promise.reject("No hay datos de cuenta");
+          }
 
           const parsed = CardDetailsSchema.parse(response.data.data);
+
           set({ cardDetails: parsed });
+
+          return parsed;
+
         } catch (error) {
-          toast.error("Error al obtener los datos de la cuenta.");
+          set({ cardDetails: null });
+
           console.error("Error al obtener datos de la tarjeta!", error);
+          toast.error("Error al obtener los datos de la cuenta.");
+
+          throw new Error("Error al cargar la data");
         }
-      },
+      }
+
+
     }),
     {
       name: "card-store",

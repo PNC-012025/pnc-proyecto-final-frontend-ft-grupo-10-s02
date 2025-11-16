@@ -2,6 +2,7 @@ import { create } from "zustand";
 import type { RegisterInput, LoginInput } from "../schema/user-schema";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useCardStore } from "./useCardStore";
 
 type UserRole = "ROLE_USER" | "ROLE_ADMIN";
 
@@ -32,7 +33,7 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
       const response = await axios.post(`${API_URL}/auth/register`, data);
       toast.success("Usuario registrado correctamente");
       console.log("Usuario registrado:", response.data);
-    } catch (error: any) {
+    } catch (error) {
       let errorMessage = "Error al registrar al usuario";
 
       if (axios.isAxiosError(error)) {
@@ -66,7 +67,7 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
       });
 
       await get().fetchWhoami();
-    } catch (error: any) {
+    } catch (error) {
       let errorMessage = "Error al iniciar sesión";
 
       if (axios.isAxiosError(error)) {
@@ -123,6 +124,10 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
       isCardActive: false,
       userRoles: [],
     });
+    const { clearCardDetails } = useCardStore.getState();
+    clearCardDetails();
+
     localStorage.removeItem("token");
+    localStorage.removeItem("card-store");
   },
 }));
