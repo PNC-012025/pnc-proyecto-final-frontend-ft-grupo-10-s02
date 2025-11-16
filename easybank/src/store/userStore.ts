@@ -3,6 +3,7 @@ import type { RegisterInput, LoginInput } from "../schema/user-schema";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useCardStore } from "./useCardStore";
+import { queryClient } from "../main";
 
 type UserRole = "ROLE_USER" | "ROLE_ADMIN";
 
@@ -129,5 +130,7 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
 
     localStorage.removeItem("token");
     localStorage.removeItem("card-store");
+
+    queryClient.clear();
   },
 }));
