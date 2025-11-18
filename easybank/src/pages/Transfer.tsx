@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { Fade } from "react-awesome-reveal";
 import { TbTextWrap } from "react-icons/tb";
-import { useTransactionStore } from "../store/useTransactionStore";
 import { IoIosTrendingUp } from "react-icons/io";
 import { IoTrendingDown } from "react-icons/io5";
 
-import { Calendar, Event as BigCalendarEvent, Views } from 'react-big-calendar';
+import { Calendar, Event as BigCalendarEvent, Views, SlotInfo } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { localizer } from "../utils/localizer";
 
 import '../styles/Tranfer.css';
 import { useCardStore } from "../store/useCardStore";
+import { useTransitions } from "../hooks/useTransitions";
+import { Transaction } from "../store/useTransactionStore";
 
 const messagesES = {
     today: 'Hoy',
@@ -28,12 +29,23 @@ const messagesES = {
 
 type MyEvent = BigCalendarEvent & { color?: string };
 
+type StoredEvent = {
+    title: string;
+    start: string;
+    end: string;
+    allDay: boolean;
+    color?: string;
+};
+
+
 export const Transfer = () => {
-    const { transactions, fetchTransactions } = useTransactionStore();
+
+    const { data: transactions = [] } = useTransitions();
+
     const { cardDetails } = useCardStore();
 
     const [calendarEvents, setCalendarEvents] = useState<MyEvent[]>([]);
-    const [selectedSlot, setSelectedSlot] = useState<any>(null);
+    const [selectedSlot, setSelectedSlot] = useState<SlotInfo | null>(null);
     const [showModal, setShowModal] = useState(false);
     const [newTitle, setNewTitle] = useState('');
     const [selectedEvent, setSelectedEvent] = useState<MyEvent | null>(null);
@@ -81,13 +93,9 @@ export const Transfer = () => {
     };
 
     useEffect(() => {
-        fetchTransactions();
-    }, [fetchTransactions]);
-
-    useEffect(() => {
         if (!accountKey) return;
 
-        const txEvents: MyEvent[] = transactions.map(tx => ({
+        const txEvents: MyEvent[] = transactions.map((tx: Transaction) => ({
             title: `${tx.type === "RECEIVER" ? 'Ingreso' : 'Egreso'} - $${tx.amount.toFixed(2)}`,
             start: new Date(tx.date),
             end: new Date(tx.date),
@@ -95,22 +103,27 @@ export const Transfer = () => {
         }));
 
         const storedEvents = localStorage.getItem(accountKey);
+
         if (storedEvents) {
-            const parsedEvents = JSON.parse(storedEvents).map((event: any) => ({
-                ...event,
-                start: new Date(event.start),
-                end: new Date(event.end),
+            const parsedRaw: StoredEvent[] = JSON.parse(storedEvents);
+
+            const parsedEvents: MyEvent[] = parsedRaw.map(ev => ({
+                ...ev,
+                start: new Date(ev.start),
+                end: new Date(ev.end)
             }));
+
             setCalendarEvents([...txEvents, ...parsedEvents]);
         } else {
             setCalendarEvents(txEvents);
         }
     }, [transactions, accountKey]);
 
+
     const handleAddEvent = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!accountKey) return;
+        if (!accountKey || !selectedSlot) return;
 
         const newEvent: MyEvent = {
             title: newTitle,
@@ -132,7 +145,6 @@ export const Transfer = () => {
         setShowModal(false);
         setNewTitle('');
     };
-
 
     const ingresosCount = calendarEvents.filter(event =>
         String(event.title).startsWith("Ingreso")
@@ -160,8 +172,8 @@ export const Transfer = () => {
 
                         {transactions
                             .slice()
-                            .reverse() 
-                            .map(tx => (
+                            .reverse()
+                            .map((tx: Transaction) => (
                                 <div key={tx.id} className='history-text'>
                                     {tx.type === "RECEIVER" ? (
                                         <IoIosTrendingUp className='bg-green-500 text-white rounded-full tr' />

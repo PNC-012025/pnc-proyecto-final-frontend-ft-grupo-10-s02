@@ -8,6 +8,7 @@ import { notifyError, notifyErrorAmount, notifySucces, notifySuccesEdit } from '
 import './ExpenseForm.css'
 import { useCardStore } from '../../store/useCardStore'
 import { useExpenseStore } from '../../store/useExpenseStore'
+import { useExpensivesQuery } from '../../hooks/useExpensives'
 
 export const ExpenseForm = () => {
 
@@ -38,6 +39,7 @@ export const ExpenseForm = () => {
 
     const { addExpense, updateExpense } = useExpenseStore();
     
+    const { queryClient } = useExpensivesQuery();
 
    const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -63,6 +65,10 @@ export const ExpenseForm = () => {
         } else {
             notifySucces();
             await addExpense(expense);
+
+            queryClient.invalidateQueries({
+                queryKey: ['expensive']
+            })
         }
 
         setExpense(initialExpense);
@@ -78,7 +84,7 @@ export const ExpenseForm = () => {
             setExpense(editItemExpense);
         }
 
-    }, [state.editingId])
+    }, [state.editingId, state.expenses])
 
 
     const { cardDetails } = useCardStore();

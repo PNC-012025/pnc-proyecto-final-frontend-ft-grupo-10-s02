@@ -1,15 +1,10 @@
-import { useEffect } from 'react';
-import { useExpenseStore } from '../../store/useExpenseStore';
 import { ExpenseItem } from '../ExpenseItem/ExpenseItem';
 import './ListExpense.css'
+import { useExpensivesQuery } from '../../hooks/useExpensives';
 
 export const ListExpense = () => {
-    const { expenses, fetchExpenses } = useExpenseStore();
 
-    useEffect(() => {
-        fetchExpenses();
-    }, [fetchExpenses]);
-
+    const {data} = useExpensivesQuery();
 
     return (
         <div className='list-panel'>
@@ -18,10 +13,10 @@ export const ListExpense = () => {
             </div>
 
             <div className='item-list-div'>
-                {expenses.length === 0 ? (
+                {data?.length === 0 ? (
                     <p>No hay gastos</p>
                 ) : (
-                    expenses.map((expenseItem, idx) => (
+                    data?.map((expenseItem, idx) => (
                         <ExpenseItem
                             key={expenseItem.id ?? `temp-id-${idx}`}
                             expenseItem={expenseItem}

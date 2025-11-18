@@ -11,7 +11,7 @@ type FormData = {
   description: string;
 };
 
-interface Transaction {
+export interface Transaction {
   id: string;
   amount: number;
   description: string | null;
@@ -26,7 +26,7 @@ interface TransactionState {
   setPopupOpen: (open: boolean) => void;
   sendTransaction: (data: FormData, onSuccess?: () => void) => Promise<void>;
   transactions: Transaction[];
-  fetchTransactions: () => Promise<void>;
+  fetchTransactions: () => Promise<Transaction[]>;
   getSentTransactions: () => Transaction[];
   getReceivedTransactions: () => Transaction[];
 }
@@ -76,7 +76,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   },
 
 
-  fetchTransactions: async () => {
+  fetchTransactions: async (): Promise<Transaction[]> => {
     try {
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -86,8 +86,9 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       const list = res.data?.data || [];
 
       set({ transactions: list });
-
       return list;
+
+
     } catch (error) {
       set({ transactions: [] });
       console.log(error);

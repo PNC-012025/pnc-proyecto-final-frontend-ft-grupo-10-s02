@@ -30,6 +30,7 @@ export const DashboardHome = () => {
     const [result, setResult] = useState<string>('');
 
     const { data, isLoading } = useDataProfile();
+    const {data: transactions} = useTransitions();
 
     const isActive = () => {
         if (data?.firstName) return true;
@@ -39,7 +40,7 @@ export const DashboardHome = () => {
     const { setPopupOpen } = useCardStore();
 
     useTransitions();
-    const { transactions, setPopupOpen: setTransactionPopup } = useTransactionStore();
+    const {  setPopupOpen: setTransactionPopup } = useTransactionStore();
 
 
     const handleConversion = (e: React.FormEvent) => {
