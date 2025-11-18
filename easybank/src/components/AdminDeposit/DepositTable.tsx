@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { toast } from "react-toastify";
-import { useAdminStore } from "../../store/useAdminStore";
-import { useAccountStore } from "../../store/useAccountStore";
-import { useDepositStore } from "../../store/useDepositStore";
+import { useUsers } from "../../hooks/useUsers";
+import { useUserAccounts } from "../../hooks/useAccounts";
+import { useDeposit } from "../../hooks/useDeposits";
 import DepositPopup from "./DepositPopup";
 import { AccountResponseAdmin } from "../../schema/account-schema";
 
@@ -25,16 +25,11 @@ const DepositTable = () => {
 	const [showDepositPopup, setShowDepositPopup] = useState(false);
 	const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
 
-	const { users, fetchAllUsers } = useAdminStore();
-	const {
-		accounts,
-		fetchUserAccounts,
-		loading: loadingAccounts,
-		error: errorAccounts,
-		reset: resetAccounts,
-	} = useAccountStore();
 
-	const { deposit, loading: loadingDeposit, error: errorDeposit, success, reset: resetDeposit } = useDepositStore();
+	const { data: users = [] } = useUsers();
+	const accountsQuery = useUserAccounts(selectedUserId, !!selectedUserId && showDepositPopup);
+	const { data: accounts = [], isLoading: loadingAccounts, error: accountsError } = accountsQuery;
+	const depositMutation = useDeposit();
 
 	const filteredData = users
 		.filter((user) => user.role !== "ROLE_ADMIN")
@@ -44,7 +39,6 @@ const DepositTable = () => {
 
 	const handleOpenDeposit = async (userId: string) => {
 		setSelectedUserId(userId);
-		await fetchUserAccounts(userId);
 		setShowDepositPopup(true);
 	};
 
@@ -52,25 +46,38 @@ const DepositTable = () => {
 		setShowDepositPopup(false);
 		setSelectedUserId(null);
 		setSelectedAccountId(null);
-		resetAccounts();
-		resetDeposit();
 	};
+
 
 	const handleDeposit = async (amount: number, description: string) => {
 		if (!selectedUserId || !selectedAccountId) return;
-		await deposit({ userId: selectedUserId, accountId: selectedAccountId, amount, description });
+		try {
+			await depositMutation.mutateAsync({ userId: selectedUserId, accountId: selectedAccountId, amount, description });
+			// cerrar popup al completar
+			setShowDepositPopup(false);
+			setSelectedUserId(null);
+			setSelectedAccountId(null);
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	useEffect(() => {
-		if (showDepositPopup && accounts.length > 0) {
-			setUserAccounts(accounts);
-			setSelectedAccountId(accounts[0].id);
+		if (showDepositPopup && accounts && accounts.length > 0) {
+			const firstAccountId = accounts[0]?.id;
+			setUserAccounts((prev) => {
+				if (prev.length !== accounts.length || prev[0]?.id !== firstAccountId) {
+					return accounts;
+				}
+				return prev;
+			});
+			setSelectedAccountId((prev) => prev ?? firstAccountId);
+		} else {
+			setUserAccounts((prev) => (prev.length !== 0 ? [] : prev));
 		}
 	}, [accounts, showDepositPopup]);
 
-	useEffect(() => {
-		fetchAllUsers();
-	}, [fetchAllUsers]);
+	// ahora los usuarios vienen de React Query (useUsers)
 
 	const columns: TableColumn<User>[] = [
 		{
@@ -221,11 +228,11 @@ const DepositTable = () => {
 					selectedAccountId={selectedAccountId ?? ""}
 					setSelectedAccountId={setSelectedAccountId}
 					loadingAccounts={loadingAccounts}
-					errorAccounts={errorAccounts}
+					errorAccounts={accountsError ? (accountsError as Error).message : ''}
 					onDeposit={handleDeposit}
-					loadingDeposit={loadingDeposit}
-					errorDeposit={errorDeposit}
-					success={success}
+					loadingDeposit={depositMutation.status === 'pending'}
+					errorDeposit={depositMutation.error ? (depositMutation.error as Error).message : ''}
+					success={depositMutation.status === 'success'}
 				/>
 			)}
 

@@ -1,23 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { toast } from "react-toastify";
-import { useAdminStore } from "../../store/useAdminStore";
+import { useUsers, useDeleteUser, useUpdateUserRole, User } from "../../hooks/useUsers";
 import { ChangeRolePopup } from "./ChangeRolePopup";
 import { DeleteUserPopup } from "./DeleteUserPopup";
 import CreateUserModal from "./CreateUserModal";
 import UserDetailsPopup from "./UserDetailsPopup";
 
-
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  active: boolean;
-  dui: string;
-  role: "ROLE_ADMIN" | "ROLE_USER";
-}
 
 const ClientTable = () => {
   const [filterText, setFilterText] = useState("");
@@ -28,14 +17,12 @@ const ClientTable = () => {
   const [showRolePopup, setShowRolePopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState<{ id: string, role: string, name: string } | null>(null);
 
-  const {
-    users,
-    loading,
-    error,
-    fetchAllUsers,
-    deleteUser,
-    updateUserRole,
-  } = useAdminStore();
+  const usersQuery = useUsers();
+  const users: User[] = (usersQuery.data ?? []) as User[];
+  const loading = usersQuery.isLoading;
+  const isError = usersQuery.isError;
+  const deleteUserMutation = useDeleteUser();
+  const updateRoleMutation = useUpdateUserRole();
 
   const filteredData = users.filter((user) =>
     `${user.first_name} ${user.last_name} ${user.email} ${user.dui}`
@@ -225,7 +212,11 @@ const ClientTable = () => {
                   onClose={() => setShowRolePopup(false)}
                   onConfirm={async () => {
                     const newRole = selectedUser.role === "ROLE_ADMIN" ? "ROLE_USER" : "ROLE_ADMIN";
-                    await updateUserRole(selectedUser.id, newRole);
+                    try {
+                      await updateRoleMutation.mutateAsync({ id: selectedUser.id, role: newRole });
+                    } catch (error) {
+                      console.error(error);
+                    }
                     setShowRolePopup(false);
                   }}
                   userName={selectedUser.name}
@@ -265,9 +256,12 @@ const ClientTable = () => {
                   onClose={() => setDeleteUserId(null)}
                   onConfirm={async () => {
                     if (deleteUserId) {
-                      await deleteUser(deleteUserId);
-                      toast.success("Usuario eliminado correctamente");
-                      setDeleteUserId(null);
+                      try {
+                        await deleteUserMutation.mutateAsync(deleteUserId);
+                        setDeleteUserId(null);
+                      } catch (error) {
+                        console.error(error);
+                      }
                     }
                   }}
                   userName={
@@ -284,11 +278,6 @@ const ClientTable = () => {
     },
   ];
 
-  // Cargar usuarios al montar el componente
-  useEffect(() => {
-    fetchAllUsers();
-  }, [fetchAllUsers]);
-
   // Manejar estados de carga y error
   if (loading) {
     return (
@@ -298,10 +287,18 @@ const ClientTable = () => {
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <p className="text-red-500">{error}</p>
+        <div className="text-center">
+          <p className="text-red-500">Error cargando usuarios.</p>
+          <button
+            className="mt-3 px-3 py-1 bg-blue-600 text-white rounded"
+            onClick={() => window.location.reload()}
+          >
+            Reintentar
+          </button>
+        </div>
       </div>
     );
   }

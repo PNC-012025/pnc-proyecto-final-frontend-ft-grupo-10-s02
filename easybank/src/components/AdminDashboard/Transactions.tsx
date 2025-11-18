@@ -1,20 +1,16 @@
-import { useEffect, useState } from "react";
-import { useAdminTransStore } from "../../store/useAdminTransStore";
+import { useState } from "react";
+import { useTransactions, useTransactionById } from "../../hooks/useTransactions";
 
 const TransactionSearch = () => {
-	const { transactions, loading, error, fetchTransactions, findById } = useAdminTransStore();
 	const [searchId, setSearchId] = useState("");
+	const [searchedId, setSearchedId] = useState<string | null>(null);
 
-	useEffect(() => {
-		fetchTransactions();
-	}, [fetchTransactions]);
+	const transactionsQuery = useTransactions();
+	const transactionByIdQuery = useTransactionById(searchedId);
 
 	const handleSearch = async () => {
-		if (searchId.trim() === "") {
-			fetchTransactions();
-		} else {
-			await findById(searchId.trim());
-		}
+		const id = searchId.trim();
+		setSearchedId(id === "" ? null : id);
 	};
 
 	return (
@@ -50,67 +46,81 @@ const TransactionSearch = () => {
 				</div>
 			</div>
 
-			{error && (
-				<div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg border border-red-200">
-					{error}
-				</div>
-			)}
 
-			{loading ? (
-				<div className="py-12 text-center">
-					<svg className="animate-spin mx-auto h-8 w-8 text-blue-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-						<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-						<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-					</svg>
-					<p className="text-gray-500">Cargando transacciones...</p>
-				</div>
-			) : transactions.length > 0 ? (
-				<div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
-					<h2 className="px-6 pt-6 pb-2 text-lg font-semibold text-blue-700">Lista de transacciones</h2>
-					<div className="overflow-x-auto">
-						<table className="min-w-full divide-y divide-gray-200 text-sm text-left">
-							<thead className="bg-gray-50 text-gray-600 uppercase text-xs">
-								<tr>
-									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">ID</th>
-									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Monto</th>
-									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Fecha</th>
-									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Cuenta Origen</th>
-									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Titular Origen</th>
-									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Cuenta Destino</th>
-									<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Titular Destino</th>
-								</tr>
-							</thead>
-							<tbody className="in-admin-us divide-y divide-gray-100 bg-white">
-								{transactions.map((t) => (
-									<tr key={t.transactionId} className="hover:bg-blue-50 transition">
-										<td className="px-6 py-4 font-mono text-gray-700">{t.transactionId.slice(0, 8)}...</td>
-										<td className="px-6 py-4">
-											<span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-												${Number(t.amount).toFixed(2)}
-											</span>
-										</td>
-										<td className="px-6 py-4 text-gray-600">
-											{t.date ? new Date(t.date).toLocaleString() : ""}
-										</td>
-										<td className="in-admin-us px-6 py-4 text-gray-600">{t.originAccount.accountNumber}</td>
-										<td className="in-admin-us px-6 py-4 text-gray-600">{t.originAccount.accountOwner}</td>
-										<td className="in-admin-us px-6 py-4 text-gray-600">{t.destinationAccount.accountNumber}</td>
-										<td className="in-admin-us px-6 py-4 text-gray-600">{t.destinationAccount.accountOwner}</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
+			{(() => {
+				const errorMsg = transactionByIdQuery.error || transactionsQuery.error ? ((transactionByIdQuery.error || transactionsQuery.error) as Error).message : null;
+				if (errorMsg) {
+					return (
+						<div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg border border-red-200">
+							{errorMsg}
+						</div>
+					);
+				}
+
+				if (transactionsQuery.isLoading || transactionByIdQuery.isLoading) {
+					return (
+						<div className="py-12 text-center">
+							<svg className="animate-spin mx-auto h-8 w-8 text-blue-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+								<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+								<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+							</svg>
+							<p className="text-gray-500">Cargando transacciones...</p>
+						</div>
+					);
+				}
+
+				const list = searchedId ? (transactionByIdQuery.data ? [transactionByIdQuery.data] : []) : (transactionsQuery.data ?? []);
+				if (list.length > 0) {
+					return (
+						<div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
+							<h2 className="px-6 pt-6 pb-2 text-lg font-semibold text-blue-700">Lista de transacciones</h2>
+							<div className="overflow-x-auto">
+								<table className="min-w-full divide-y divide-gray-200 text-sm text-left">
+									<thead className="bg-gray-50 text-gray-600 uppercase text-xs">
+										<tr>
+											<th className="in-admin-us px-6 py-3 tracking-wider font-medium">ID</th>
+											<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Monto</th>
+											<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Fecha</th>
+											<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Cuenta Origen</th>
+											<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Titular Origen</th>
+											<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Cuenta Destino</th>
+											<th className="in-admin-us px-6 py-3 tracking-wider font-medium">Titular Destino</th>
+										</tr>
+									</thead>
+									<tbody className="in-admin-us divide-y divide-gray-100 bg-white">
+										{list.map((t) => (
+											<tr key={t.transactionId} className="hover:bg-blue-50 transition">
+												<td className="px-6 py-4 font-mono text-gray-700">{t.transactionId.slice(0, 8)}...</td>
+												<td className="px-6 py-4">
+													<span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+														${Number(t.amount).toFixed(2)}
+													</span>
+												</td>
+												<td className="px-6 py-4 text-gray-600">
+													{t.date ? new Date(t.date).toLocaleString() : ""}
+												</td>
+												<td className="in-admin-us px-6 py-4 text-gray-600">{t.originAccount.accountNumber}</td>
+												<td className="in-admin-us px-6 py-4 text-gray-600">{t.originAccount.accountOwner}</td>
+												<td className="in-admin-us px-6 py-4 text-gray-600">{t.destinationAccount.accountNumber}</td>
+												<td className="in-admin-us px-6 py-4 text-gray-600">{t.destinationAccount.accountOwner}</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					);
+				}
+				return (
+					<div className="py-12 text-center text-gray-600">
+						<svg className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+						</svg>
+						<h3 className="text-lg font-medium">No se encontraron transacciones</h3>
+						<p className="text-gray-500 mt-1">Intenta con otro ID o revisa si hay datos registrados</p>
 					</div>
-				</div>
-			) : (
-				<div className="py-12 text-center text-gray-600">
-					<svg className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-					</svg>
-					<h3 className="text-lg font-medium">No se encontraron transacciones</h3>
-					<p className="text-gray-500 mt-1">Intenta con otro ID o revisa si hay datos registrados</p>
-				</div>
-			)}
+				);
+			})()}
 		</div>
 	);
 };
