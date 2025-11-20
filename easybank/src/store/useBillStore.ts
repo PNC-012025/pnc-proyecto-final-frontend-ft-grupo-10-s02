@@ -36,9 +36,16 @@ export const useBillStore = create<BillStoreState>((set) => ({
         }
       );
       set({ bills: response.data.data, loading: false });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let message = "Error al obtener facturas";
+      if (axios.isAxiosError(error)) {
+        message =
+          (error.response?.data?.message as string) || error.message || message;
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
       set({
-        error: error.response?.data?.message || "Error al obtener facturas",
+        error: message,
         loading: false,
         bills: [],
       });
