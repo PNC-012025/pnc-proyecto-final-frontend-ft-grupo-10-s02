@@ -32,10 +32,18 @@ export const useDepositStore = create<DepositStoreState>((set) => ({
         }
       );
       set({ loading: false, success: true });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let message = "Error al depositar";
+      if (axios.isAxiosError(error)) {
+        message = error.response?.data?.message ?? error.message ?? message;
+      } else if (error instanceof Error) {
+        message = error.message;
+      } else if (typeof error === "string") {
+        message = error;
+      }
       set({
         loading: false,
-        error: error.response?.data?.message || "Error al depositar",
+        error: message,
         success: false,
       });
     }

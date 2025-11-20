@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Fade } from 'react-awesome-reveal';
 import { FaPaperPlane } from "react-icons/fa";
 import { TbTransfer } from "react-icons/tb";
@@ -13,7 +13,8 @@ import { ActivateCardPopup } from './ActivateCardPopup';
 import { useCardStore } from '../store/useCardStore';
 import { useTransactionStore } from '../store/useTransactionStore';
 import { TransactionPopup } from './TransactionPopup';
-import { useEasyBankStore } from '../store/userStore';
+import { useDataProfile } from '../hooks/useDataProfile';
+import { useTransitions } from '../hooks/useTransitions';
 
 const currencyRates: { [key: string]: number } = {
     EUR: 0.92,
@@ -28,17 +29,18 @@ export const DashboardHome = () => {
     const [currency, setCurrency] = useState<string>('EUR');
     const [result, setResult] = useState<string>('');
 
-    const { setPopupOpen, cardDetails, fetchCardDetails } = useCardStore();
-    const { isCardActive } = useEasyBankStore();
+    const { data, isLoading } = useDataProfile();
+    const {data: transactions} = useTransitions();
 
-    const { transactions, fetchTransactions, setPopupOpen: setTransactionPopup } = useTransactionStore();
+    const isActive = () => {
+        if (data?.firstName) return true;
+        return false
+    }
 
-    useEffect(() => {
-        if (isCardActive) {
-            fetchCardDetails();
-            fetchTransactions();
-        }
-    }, [isCardActive, fetchCardDetails, fetchTransactions]);
+    const { setPopupOpen } = useCardStore();
+
+    useTransitions();
+    const {  setPopupOpen: setTransactionPopup } = useTransactionStore();
 
 
     const handleConversion = (e: React.FormEvent) => {
@@ -48,18 +50,13 @@ export const DashboardHome = () => {
         setResult(`$${amount} USD = ${converted.toFixed(2)} ${currency}`);
     };
 
-    useEffect(() => {
-        if (isCardActive) {
-            fetchCardDetails();
-        }
-    }, [isCardActive, fetchCardDetails]);
 
     return (
         <main>
             <div className='home-header flex justify-between items-center'>
                 <div className='client-card'>
-                    <p className='client-p'>
-                        {cardDetails ? `${cardDetails.firstName} ${cardDetails.lastName}` : 'Cliente'}
+                    <p className="client-p">
+                        {isLoading ? "Cargando..." : data ? `${data.firstName} ${data.lastName}` : "Cliente"}
                     </p>
                 </div>
 
@@ -77,19 +74,19 @@ export const DashboardHome = () => {
                                 <div className='accoun-debit'>
                                     <p className='de-t'>Cuenta Easybank</p>
                                     <p className='de-p'>
-                                        {cardDetails ? `$${cardDetails.balance.toFixed(2)}` : '$00.00'}
+                                        {data ? `$${data.balance.toFixed(2)}` : '$00.00'}
                                     </p>
                                 </div>
 
                                 <div className='account-data'>
                                     <p className='da-pa'>
-                                        {cardDetails ?
-                                            `${cardDetails.accountNumber}` :
+                                        {data ?
+                                            `${data.accountNumber}` :
                                             '*************088'
                                         }
                                     </p>
                                     <p className='da-da'>
-                                        {cardDetails ? `${cardDetails.firstName} - ${cardDetails.lastName}` : 'Cliente'}
+                                        {data ? `${data.firstName} - ${data.lastName}` : 'Cliente'}
                                     </p>
                                 </div>
                             </div>
@@ -103,33 +100,40 @@ export const DashboardHome = () => {
                                 <p className='h-p'>Últimas 5 Transacciones</p>
                             </div>
 
-                            {transactions
-                                .slice() 
-                                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) 
-                                .slice(0, 5)
-                                .map(tx => (
-                                    <div key={tx.id} className='history-text'>
-                                        {tx.type === "RECEIVER" ? (
-                                            <IoIosTrendingUp className='bg-green-500 text-white rounded-full tr' />
-                                        ) : (
-                                            <IoTrendingDown className='bg-red-500 text-white rounded-full tr' />
-                                        )}
-                                        <div className='flex justify-between items-center w-full'>
-                                            <div>
-                                                <p className='h-p'>{tx.description ?? tx.accountNumber}</p>
-                                                <p className='text-sm text-gray-500'>Cuenta {tx.accountNumber}</p>
-                                                <p className='text-sm text-gray-400'>
-                                                    {new Date(tx.date).toLocaleString()}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p className={tx.type === "RECEIVER" ? '' : 'text-red-500'}>
-                                                    {tx.type === "RECEIVER" ? `$${tx.amount.toFixed(2)}` : `-$${tx.amount.toFixed(2)}`}
-                                                </p>
+                            {transactions?.length ? (
+                                transactions
+                                    .slice()
+                                    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                                    .slice(0, 5)
+                                    .map(tx => (
+                                        <div key={tx.id} className='history-text'>
+                                            {tx.type === "RECEIVER" ? (
+                                                <IoIosTrendingUp className='bg-green-500 text-white rounded-full tr' />
+                                            ) : (
+                                                <IoTrendingDown className='bg-red-500 text-white rounded-full tr' />
+                                            )}
+                                            <div className='flex justify-between items-center w-full'>
+                                                <div>
+                                                    <p className='h-p'>{tx.description ?? tx.accountNumber}</p>
+                                                    <p className='text-sm text-gray-500'>Cuenta {tx.accountNumber}</p>
+                                                    <p className='text-sm text-gray-400'>
+                                                        {new Date(tx.date).toLocaleString()}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p className={tx.type === "RECEIVER" ? '' : 'text-red-500'}>
+                                                        {tx.type === "RECEIVER"
+                                                            ? `$${tx.amount.toFixed(2)}`
+                                                            : `-$${tx.amount.toFixed(2)}`}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))
+                            ) : (
+                                <p className="text-gray-500 text-center">Sin transacciones</p>
+                            )}
+
                         </div>
                     </Fade>
 
@@ -146,12 +150,12 @@ export const DashboardHome = () => {
                                     activar esta tarjeta, Es fácil, rápido y totalmente gratis.
                                 </p>
                                 <button
-                                    disabled={isCardActive}
-                                    className={`home-cta px-4 py-2 rounded ${isCardActive ? 'bg-gray-400 text-gray-100 cursor-not-allowed' : 'bg-green-500 text-gray-50'
+                                    disabled={isActive()}
+                                    className={`home-cta px-4 py-2 rounded ${isActive() ? 'bg-gray-400 text-gray-100 cursor-not-allowed' : 'bg-green-500 text-gray-50'
                                         }`}
                                     onClick={() => setPopupOpen(true)}
                                 >
-                                    {isCardActive ? '¡Disfrutala!' : 'Actívala'}
+                                    {data?.lastName ? '¡Disfrutala!' : 'Actívala'}
                                 </button>
 
                             </div>

@@ -4,20 +4,19 @@ import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { DashboardLayout } from "./pages/DashboardLayout";
 import { DashboardHome } from "./components/DashboardHome";
-import { ExpDashboard } from "./components/ExpenseDashboard/ExpDashboard";
 
-import { ExpenseProvider } from "./context/ExpenseContext";
 import { ToastContainer } from "react-toastify";
 
 import { Transfer } from "./pages/Transfer";
 
-import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
+import AdminDashboard from "./components/Admin/AdminDashboard/AdminDashboard";
 import { AdminPage } from "./pages/AdminPage";
-import AdminRoute from "./components/AdminDashboard/AdminRoute";
+import AdminRoute from "./components/Admin/AdminDashboard/AdminRoute";
+import ExpensesDashboard from "./pages/expense/ExpenseDashboard";
 
 function App() {
   return (
-    <ExpenseProvider>
+    <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
@@ -26,7 +25,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardHome />} />
           <Route path="home" element={<DashboardHome />} />
-          <Route path="wallet" element={<ExpDashboard />} />
+          <Route path="wallet" element={<ExpensesDashboard />} />
           <Route path="transfer" element={<Transfer />} />
         </Route>
         <Route path="/admin" element={<AdminRoute>
@@ -48,7 +47,7 @@ function App() {
         pauseOnHover
         theme="colored"
       />
-    </ExpenseProvider>
+    </>
   );
 }
 

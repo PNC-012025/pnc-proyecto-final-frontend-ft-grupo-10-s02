@@ -2,10 +2,13 @@ import { create } from "zustand";
 import type { RegisterInput, LoginInput } from "../schema/user-schema";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useCardStore } from "./useCardStore";
+import { queryClient } from "../main";
 
 type UserRole = "ROLE_USER" | "ROLE_ADMIN";
 
 type EasyBankStore = {
+  userId: string | null;
   token: string | null;
   isAuthenticated: boolean;
   isCardActive: boolean;
@@ -22,6 +25,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const savedToken = localStorage.getItem("token");
 
 export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
+  userId: null,
   token: savedToken,
   isAuthenticated: !!savedToken,
   isCardActive: false,
@@ -32,7 +36,7 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
       const response = await axios.post(`${API_URL}/auth/register`, data);
       toast.success("Usuario registrado correctamente");
       console.log("Usuario registrado:", response.data);
-    } catch (error: any) {
+    } catch (error) {
       let errorMessage = "Error al registrar al usuario";
 
       if (axios.isAxiosError(error)) {
@@ -41,7 +45,9 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
         } else if (error.response?.data?.data.error) {
           errorMessage = error.response.data.data.error;
         } else if (error.response?.data?.data.errors) {
-          errorMessage = Object.values(error.response.data.data.errors).join(" | ");
+          errorMessage = Object.values(error.response.data.data.errors).join(
+            " | "
+          );
         }
       }
 
@@ -66,7 +72,7 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
       });
 
       await get().fetchWhoami();
-    } catch (error: any) {
+    } catch (error) {
       let errorMessage = "Error al iniciar sesión";
 
       if (axios.isAxiosError(error)) {
@@ -75,7 +81,9 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
         } else if (error.response?.data?.data.error) {
           errorMessage = error.response.data.data.error;
         } else if (error.response?.data?.data.errors) {
-          errorMessage = Object.values(error.response.data.data.errors).join(" | ");
+          errorMessage = Object.values(error.response.data.data.errors).join(
+            " | "
+          );
         }
       }
 
@@ -84,7 +92,6 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
       throw error;
     }
   },
-
 
   fetchWhoami: async () => {
     try {
@@ -97,9 +104,10 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
         },
       });
 
-      const { active, roles } = response.data.data;
+      const { active, roles, id } = response.data.data;
 
       set({
+        userId: id,
         isCardActive: active,
         userRoles: roles,
       });
@@ -123,6 +131,12 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
       isCardActive: false,
       userRoles: [],
     });
+    const { clearCardDetails } = useCardStore.getState();
+    clearCardDetails();
+
     localStorage.removeItem("token");
+    localStorage.removeItem("card-store");
+
+    queryClient.clear();
   },
 }));

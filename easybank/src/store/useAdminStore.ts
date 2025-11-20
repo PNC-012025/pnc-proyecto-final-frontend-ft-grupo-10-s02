@@ -1,7 +1,24 @@
 import { create } from "zustand";
 import axios from "axios";
 import { UserStatusInput } from "../schema/admin-schema";
+import { AccountResponseAdmin } from "../schema/account-schema";
 import { toast } from "react-toastify";
+
+// Tipos para evitar `any` al mapear respuestas del backend
+interface ApiResponse<T> {
+  data: T;
+  message?: string;
+}
+
+interface AdminUserApi {
+  id: string;
+  username?: string;
+  email: string;
+  name?: string; // nombre completo en el backend
+  active?: boolean;
+  dui?: string;
+  roles?: string[];
+}
 
 interface User {
   id: string;
@@ -24,13 +41,14 @@ interface AdminStoreState {
   deleteUser: (id: string) => Promise<void>;
   resetStore: () => void;
   updateUserRole: (userId: string, role: string) => Promise<void>;
+  // Se agregó para reflejar la implementación existente
+  getUserAccounts: (userId: string) => Promise<AccountResponseAdmin[] | null>;
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const useAdminStore = create<AdminStoreState>((set, get) => ({
   users: [],
-  transactions: [],
   loading: false,
   error: null,
 
@@ -38,14 +56,24 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${API_URL}/admin/userlist`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get<ApiResponse<AdminUserApi[]>>(
+        `${API_URL}/admin/userlist`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-      const users = (response.data.data as any[]).map((user) => {
+      const apiUsers = response.data.data;
+
+      const users: User[] = apiUsers.map((user) => {
         const nameParts = (user.name ?? "Sin nombre").split(" ");
         const first_name = nameParts.slice(0, -1).join(" ") || "Sin nombre";
         const last_name = nameParts.slice(-1)[0] || "";
+
+        // Normalizar role a los valores esperados
+        const rawRole = user.roles?.[0] ?? "ROLE_USER";
+        const role: User["role"] =
+          rawRole === "ROLE_ADMIN" ? "ROLE_ADMIN" : "ROLE_USER";
 
         return {
           id: user.id,
@@ -55,13 +83,17 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
           last_name,
           active: user.active ?? false,
           dui: user.dui || "Sin DUI",
-          role: user.roles?.[0] ?? "USER",
+          role,
         };
       });
 
       set({ users, loading: false });
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      set({
+        loading: false,
+        error: axios.isAxiosError(error) ? error.message : String(error),
+      });
     }
   },
 
@@ -84,7 +116,7 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
       // Actualización optimista
       set((state) => ({
         users: state.users.map((user) =>
-          user.id === id ? { ...user, isActive: status } : user
+          user.id === id ? { ...user, active: status } : user
         ),
         loading: false,
       }));
@@ -105,15 +137,22 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${API_URL}/admin/userlist/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get<ApiResponse<AdminUserApi>>(
+        `${API_URL}/admin/userlist/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       set({ loading: false });
 
       const user = response.data.data;
       const nameParts = (user.name ?? "Sin nombre").split(" ");
       const first_name = nameParts.slice(0, -1).join(" ") || "Sin nombre";
       const last_name = nameParts.slice(-1)[0] || "";
+
+      const rawRole = user.roles?.[0] ?? "ROLE_USER";
+      const role: User["role"] =
+        rawRole === "ROLE_ADMIN" ? "ROLE_ADMIN" : "ROLE_USER";
 
       return {
         id: user.id,
@@ -123,7 +162,7 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
         last_name,
         active: user.active ?? false,
         dui: user.dui || "Sin DUI",
-        role: user.roles?.[0] ?? "USER",
+        role,
       } as User;
     } catch (error) {
       set({
@@ -160,14 +199,12 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(
+      const response = await axios.get<ApiResponse<AccountResponseAdmin[]>>(
         `${API_URL}/admin/userlist/${userId}/accounts`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       set({ loading: false });
-      return response.data.data; // rdv ixaz
+      return response.data.data;
     } catch (error) {
       set({
         error: axios.isAxiosError(error)
@@ -198,7 +235,10 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
       set((state) => ({
         users: state.users.map((user) =>
           user.id === userId
-            ? { ...user, role: role as "ROLE_ADMIN" | "ROLE_USER" }
+            ? {
+                ...user,
+                role: role === "ROLE_ADMIN" ? "ROLE_ADMIN" : "ROLE_USER",
+              }
             : user
         ),
         loading: false,

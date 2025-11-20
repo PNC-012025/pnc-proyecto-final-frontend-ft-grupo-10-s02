@@ -11,7 +11,7 @@ type FormData = {
   description: string;
 };
 
-interface Transaction {
+export interface Transaction {
   id: string;
   amount: number;
   description: string | null;
@@ -26,7 +26,7 @@ interface TransactionState {
   setPopupOpen: (open: boolean) => void;
   sendTransaction: (data: FormData, onSuccess?: () => void) => Promise<void>;
   transactions: Transaction[];
-  fetchTransactions: () => Promise<void>;
+  fetchTransactions: () => Promise<Transaction[]>;
   getSentTransactions: () => Transaction[];
   getReceivedTransactions: () => Transaction[];
 }
@@ -58,7 +58,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       onSuccess?.();
       await fetchCardDetails();
       await useTransactionStore.getState().fetchTransactions();
-    } catch (error: any) {
+    } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
           error.response?.data?.data.message ||
@@ -76,29 +76,26 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
   },
 
 
-  fetchTransactions: async () => {
+  fetchTransactions: async (): Promise<Transaction[]> => {
     try {
       const token = localStorage.getItem("token");
+      const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
       const res = await axios.get(`${API_BASE}/transaction/findown`, config);
 
-      console.log(res.data.data);
+      const list = res.data?.data || [];
+
+      set({ transactions: list });
+      return list;
 
 
-      if (res.data?.data) {
-        set({ transactions: res.data.data });
-      } else {
-        set({ transactions: [] });
-      }
     } catch (error) {
-      toast.error("Error al cargar las transacciones");
-      console.log(error);
       set({ transactions: [] });
+      console.log(error);
+      return [];
     }
   },
+
   getSentTransactions: () => {
     return get().transactions.filter((tx) => tx.type === "SENDER");
   },
