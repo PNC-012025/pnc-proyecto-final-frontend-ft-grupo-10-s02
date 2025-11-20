@@ -45,7 +45,9 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
         } else if (error.response?.data?.data.error) {
           errorMessage = error.response.data.data.error;
         } else if (error.response?.data?.data.errors) {
-          errorMessage = Object.values(error.response.data.data.errors).join(" | ");
+          errorMessage = Object.values(error.response.data.data.errors).join(
+            " | "
+          );
         }
       }
 
@@ -79,7 +81,9 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
         } else if (error.response?.data?.data.error) {
           errorMessage = error.response.data.data.error;
         } else if (error.response?.data?.data.errors) {
-          errorMessage = Object.values(error.response.data.data.errors).join(" | ");
+          errorMessage = Object.values(error.response.data.data.errors).join(
+            " | "
+          );
         }
       }
 
@@ -88,7 +92,6 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
       throw error;
     }
   },
-
 
   fetchWhoami: async () => {
     try {

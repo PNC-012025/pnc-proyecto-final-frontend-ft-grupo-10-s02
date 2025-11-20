@@ -31,7 +31,7 @@ export function PaymentScheduler() {
     console.log(userId);
 
 
-    const [mes, setMes] = useState(new Date())
+    const [mes, setMes] = useState(new Date(2024, 10))
     const [pagos, setPagos] = useState<ScheduledPayment[]>([])
     const [pagoSeleccionado, setPagoSeleccionado] = useState<ScheduledPayment | null>(null)
     const [formularioAbierto, setFormularioAbierto] = useState(false)
@@ -121,10 +121,8 @@ export function PaymentScheduler() {
     }
 
     const getPagosDelDia = (dia: number) => {
-        const year = mes.getFullYear();
-        const month = String(mes.getMonth() + 1).padStart(2, "0");
-        const fechaStr = `${year}-${month}-${String(dia).padStart(2, "0")}`;
-        return pagos.filter((p) => p.fecha === fechaStr);
+        const fechaStr = `2024-${String(mes.getMonth() + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`
+        return pagos.filter((p) => p.fecha === fechaStr)
     }
 
     const renderCalendario = () => {
@@ -148,12 +146,9 @@ export function PaymentScheduler() {
                     key={dia}
                     className={`calendar-day ${esHoy ? "calendar-day-today" : ""}`}
                     onClick={() => {
-                        const year = mes.getFullYear();
-                        const month = String(mes.getMonth() + 1).padStart(2, "0");
-                        const selectedDate = `${year}-${month}-${String(dia).padStart(2, "0")}`;
                         setFormData({
                             ...formData,
-                            fechaInicio: selectedDate,
+                            fechaInicio: `2024-${String(mes.getMonth() + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`,
                         })
                         setFormularioAbierto(true)
                     }}
@@ -199,29 +194,16 @@ export function PaymentScheduler() {
     useEffect(() => {
         if (!userId) return;
 
-        const key = `pagos_${userId}`;
-        const saved = localStorage.getItem(key);
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved);
-                if (Array.isArray(parsed)) {
-                    setPagos(parsed as ScheduledPayment[]);
-                } else {
-                    console.warn(`Saved pagos for ${key} is not an array`, parsed);
-                }
-            } catch (e) {
-                console.error("Failed to parse saved pagos from localStorage:", e);
-            }
-        }
+        const saved = localStorage.getItem(`pagos_${userId}`);
+        if (saved) setPagos(JSON.parse(saved));
+        console.log(userId);
+
     }, [userId]);
 
     useEffect(() => {
         if (!userId) return;
-        try {
-            localStorage.setItem(`pagos_${userId}`, JSON.stringify(pagos));
-        } catch (e) {
-            console.error("Error saving pagos to localStorage:", e);
-        }
+
+        localStorage.setItem(`pagos_${userId}`, JSON.stringify(pagos));
     }, [pagos, userId]);
 
 
