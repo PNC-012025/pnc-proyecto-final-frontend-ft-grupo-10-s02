@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { useAdminStore } from '../../store/useAdminStore';
+import { useAdminStore } from '../../../store/useAdminStore';
 
 interface User {
 	id: string;

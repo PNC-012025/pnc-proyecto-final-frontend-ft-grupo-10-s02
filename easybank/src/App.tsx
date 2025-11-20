@@ -9,9 +9,9 @@ import { ToastContainer } from "react-toastify";
 
 import { Transfer } from "./pages/Transfer";
 
-import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
+import AdminDashboard from "./components/Admin/AdminDashboard/AdminDashboard";
 import { AdminPage } from "./pages/AdminPage";
-import AdminRoute from "./components/AdminDashboard/AdminRoute";
+import AdminRoute from "./components/Admin/AdminDashboard/AdminRoute";
 import ExpensesDashboard from "./pages/expense/ExpenseDashboard";
 
 function App() {

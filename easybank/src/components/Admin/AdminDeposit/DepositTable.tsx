@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { toast } from "react-toastify";
-import { useUsers } from "../../hooks/useUsers";
-import { useUserAccounts } from "../../hooks/useAccounts";
-import { useDeposit } from "../../hooks/useDeposits";
+import { useUsers } from "../../../hooks/useUsers";
+import { useUserAccounts } from "../../../hooks/useAccounts";
+import { useDeposit } from "../../../hooks/useDeposits";
 import DepositPopup from "./DepositPopup";
-import { AccountResponseAdmin } from "../../schema/account-schema";
+import { AccountResponseAdmin } from "../../../schema/account-schema";
 
 interface User {
 	id: string;

@@ -28,9 +28,15 @@ export const useAccountStore = create<AccountStoreState>((set) => ({
         }
       );
       set({ accounts: response.data.data, loading: false });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let message = "Error al obtener cuentas";
+      if (axios.isAxiosError(error)) {
+        message = error.response?.data?.message || message;
+      } else if (error instanceof Error) {
+        message = error.message || message;
+      }
       set({
-        error: error.response?.data?.message || "Error al obtener cuentas",
+        error: message,
         loading: false,
         accounts: [],
       });

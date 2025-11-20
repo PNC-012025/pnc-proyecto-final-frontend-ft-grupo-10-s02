@@ -2,9 +2,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
-import { useAdminStore } from "../../store/useAdminStore";
+import { useAdminStore } from "../../../store/useAdminStore";
 import { toast } from "react-toastify";
-import { RegisterFormData } from "../../types";
+import { RegisterFormData } from "../../../types";
 
 
 const CreateUserModal = () => {

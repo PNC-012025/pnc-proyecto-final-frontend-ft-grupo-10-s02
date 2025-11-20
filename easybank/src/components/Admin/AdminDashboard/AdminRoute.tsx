@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEasyBankStore } from "../../store/userStore";
+import { useEasyBankStore } from "../../../store/userStore";
 
 const AdminRoute = ({ children }: { children: React.ReactNode }) => {
 	const { fetchWhoami, isAdmin, isAuthenticated } = useEasyBankStore();

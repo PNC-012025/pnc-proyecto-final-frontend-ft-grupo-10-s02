@@ -1,7 +1,7 @@
 import { useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { toast } from "react-toastify";
-import { useUsers, useDeleteUser, useUpdateUserRole, User } from "../../hooks/useUsers";
+import { useUsers, useDeleteUser, useUpdateUserRole, User } from "../../../hooks/useUsers";
 import { ChangeRolePopup } from "./ChangeRolePopup";
 import { DeleteUserPopup } from "./DeleteUserPopup";
 import CreateUserModal from "./CreateUserModal";
