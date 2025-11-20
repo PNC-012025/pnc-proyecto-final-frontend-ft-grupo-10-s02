@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useBillStore } from "../../store/useBillStore";
+import { useBillStore } from "../../../store/useBillStore";
 
 const AdminBills = () => {
 	const [searchId, setSearchId] = useState("");

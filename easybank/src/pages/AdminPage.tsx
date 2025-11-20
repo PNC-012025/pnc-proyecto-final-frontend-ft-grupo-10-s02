@@ -1,7 +1,7 @@
-import AdminDashboard from '../components/AdminDashboard/AdminDashboard'
+import AdminDashboard from "../components/Admin/AdminDashboard/AdminDashboard"
 
 export const AdminPage = () => {
   return (
-	<AdminDashboard/>
+    <AdminDashboard />
   )
 }
