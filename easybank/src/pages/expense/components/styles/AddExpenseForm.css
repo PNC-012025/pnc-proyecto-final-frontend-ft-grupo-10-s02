@@ -1,0 +1,112 @@
+/* --- Card --- */
+.expense-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 40px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 32px;
+}
+
+/* --- Header --- */
+.expense-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.icon-box {
+    background: #eff6ff;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    color: #2563eb;
+}
+
+.expense-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* --- Form --- */
+.expense-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+/* --- Inputs --- */
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #9ca3af;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 10px 14px 10px 36px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    background: #fff;
+    transition: 0.2s ease;
+}
+
+input:focus,
+select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
+
+/* --- Button --- */
+.submit-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: #05a029;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.submit-btn:hover {
+    background: #057a03;
+}
+
+.btn-icon {
+    width: 20px;
+    height: 20px;
+}

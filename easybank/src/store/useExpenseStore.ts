@@ -37,7 +37,16 @@ export const useExpenseStore = create<ExpenseStore>((set) => ({
     addExpense: async (expense) => {
         const token = localStorage.getItem("token");
         const config = { headers: { Authorization: `Bearer ${token}` } };
-        await axios.post(`${API_BASE}/bill/create`, expense, config);
+
+        const res = await axios.post(`${API_BASE}/bill/create`, expense, config);
+
+        const created = res.data.data;
+
+        set((state) => ({
+            expenses: [...state.expenses, created]
+        }));
+
+        return created;
     },
 
     deleteExpense: async (id) => {

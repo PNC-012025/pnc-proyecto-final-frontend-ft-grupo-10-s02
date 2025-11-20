@@ -1,12 +1,12 @@
-.main-dash{
-    background-color: #f4f4f4dc;
+.main-dash {
+    background-color: #ffffffdc;
     padding: 30px;
     overflow-x: hidden;
     overflow-y: scroll;
 }
 
-.lateral{
-   
+.lateral {
+
     display: flex;
     flex-direction: column;
 
@@ -16,14 +16,14 @@
     background-color: white;
 }
 
-.icon-lat{
+.icon-lat {
     display: block;
     margin: 0 auto;
     padding-left: 10px;
     margin-bottom: 30px;
 }
 
-.lateral-link{
+.lateral-link {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -34,14 +34,13 @@
 }
 
 
-.out{
+.out {
     color: rgb(84, 84, 100);
     display: block;
     margin: 0 auto;
     transition: all .5s;
 
-    &:hover{
+    &:hover {
         color: rgb(229, 63, 63);
     }
 }
-

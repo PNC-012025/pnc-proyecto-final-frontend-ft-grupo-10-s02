@@ -1,12 +1,27 @@
-import type { CategoriesType } from "../types";
+import {
+    PiggyBank,
+    Utensils,
+    Home,
+    Wallet,
+    Gamepad2,
+    HeartPulse,
+    BadgeDollarSign,
+    LucideIcon,
+} from "lucide-react";
 
-export const categories : CategoriesType[]= [
-    { id: '1', name: 'Ahorros', icon: 'ahorro' },
-    { id: '2', name: 'Comida', icon: 'comida' },
-    { id: '3', name: 'Hogar', icon: 'casa' },
-    { id: '4', name: 'Gatos varios', icon: 'gastos' },
-    { id: '5', name: 'Ocio', icon: 'ocio' },
-    { id: '6', name: 'Salud', icon: 'salud' },
-    { id: '7', name: 'Suscripciones', icon: 'suscripciones' },
+type CategoriesType = {
+    value: string;
+    label: string;
+    icon: LucideIcon;
+    color: string;
+}
+
+export const categories: CategoriesType[] = [
+    { value: "1", label: "Ahorros", icon: PiggyBank, color: "text-green-600" },
+    { value: "2", label: "Comida", icon: Utensils, color: "text-orange-600" },
+    { value: "3", label: "Hogar", icon: Home, color: "text-blue-600" },
+    { value: "4", label: "Gastos varios", icon: Wallet, color: "text-gray-600" },
+    { value: "5", label: "Ocio", icon: Gamepad2, color: "text-purple-600" },
+    { value: "6", label: "Salud", icon: HeartPulse, color: "text-red-600" },
+    { value: "7", label: "Suscripciones", icon: BadgeDollarSign, color: "text-yellow-600" },
 ];
-  

@@ -8,6 +8,7 @@ import { queryClient } from "../main";
 type UserRole = "ROLE_USER" | "ROLE_ADMIN";
 
 type EasyBankStore = {
+  userId: string | null;
   token: string | null;
   isAuthenticated: boolean;
   isCardActive: boolean;
@@ -24,6 +25,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const savedToken = localStorage.getItem("token");
 
 export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
+  userId: null,
   token: savedToken,
   isAuthenticated: !!savedToken,
   isCardActive: false,
@@ -99,9 +101,10 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
         },
       });
 
-      const { active, roles } = response.data.data;
+      const { active, roles, id } = response.data.data;
 
       set({
+        userId: id,
         isCardActive: active,
         userRoles: roles,
       });
