@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useTransactions, useTransactionById } from "../../../hooks/useTransactions";
+import { useAdminFindAll } from "../../../hooks/useAdminFindAll";
+import { useTransactionById } from "../../../hooks/useTransactions";
 
 const TransactionSearch = () => {
 	const [searchId, setSearchId] = useState("");
 	const [searchedId, setSearchedId] = useState<string | null>(null);
 
-	const transactionsQuery = useTransactions();
+	const transactionsQuery = useAdminFindAll();
 	const transactionByIdQuery = useTransactionById(searchedId);
 
 	const handleSearch = async () => {
