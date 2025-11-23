@@ -9,7 +9,7 @@ export const fetchUserAccounts = async (
   userId: string
 ): Promise<AccountResponseAdmin[]> => {
   const token = localStorage.getItem("token");
-  const res = await axios.get(`${API_URL}/admin/userlist/${userId}/accounts`, {
+  const res = await axios.get(`${API_URL}/admin/userlist/${userId}/account`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data?.data ?? [];

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useCardStore } from "./useCardStore";
 import { queryClient } from "../main";
 
-type UserRole = "USER" | "ADMIN";
+type UserRole = "ADMIN" | "USER";
 
 type EasyBankStore = {
   userId: string | null;
