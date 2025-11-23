@@ -2,6 +2,7 @@ import { useTransactionStore } from '../store/useTransactionStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import '../styles/Popup.css';
+import { useQueryClient } from '@tanstack/react-query';
 
 type FormData = {
   firstName: string;
@@ -29,9 +30,16 @@ export const TransactionPopup = () => {
     },
   });
 
+  const queryClient = useQueryClient();
+
+
   const onSubmit = (data: FormData) => {
     sendTransaction(data, () => {
       setPopupOpen(false);
+
+      queryClient.invalidateQueries({ queryKey: ['dataClient'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+
       reset();
     });
   };
