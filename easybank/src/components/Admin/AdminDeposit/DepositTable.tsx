@@ -15,7 +15,7 @@ interface User {
 	last_name: string;
 	active: boolean;
 	dui: string;
-	role: "ROLE_ADMIN" | "ROLE_USER";
+	role: "ADMIN" | "USER";
 }
 
 const DepositTable = () => {
@@ -32,7 +32,7 @@ const DepositTable = () => {
 	const depositMutation = useDeposit();
 
 	const filteredData = users
-		.filter((user) => user.role !== "ROLE_ADMIN")
+		.filter((user) => user.role !== "ADMIN")
 		.filter((user) =>
 			`${user.first_name} ${user.last_name} ${user.email} ${user.dui}`.toLowerCase().includes(filterText.toLowerCase())
 		);
@@ -142,8 +142,8 @@ const DepositTable = () => {
 			name: <span className="font-bold text-gray-700">Rol</span>,
 			selector: (row) => row.role,
 			cell: (row) => (
-				<span className={`px-3 py-1 rounded-full text-xs font-medium ${row.role === "ROLE_ADMIN" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"}`}>
-					{row.role === "ROLE_ADMIN" ? "Administrador" : "Cliente"}
+				<span className={`px-3 py-1 rounded-full text-xs font-medium ${row.role === "ADMIN" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"}`}>
+					{row.role === "ADMIN" ? "Administrador" : "Cliente"}
 				</span>
 			),
 		},

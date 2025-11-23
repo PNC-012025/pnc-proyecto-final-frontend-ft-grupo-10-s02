@@ -17,7 +17,7 @@ export interface User {
   last_name: string;
   active: boolean;
   dui: string;
-  role: "ROLE_ADMIN" | "ROLE_USER";
+  role: "ADMIN" | "USER";
 }
 
 const mapUser = (user: any): User => {
@@ -33,7 +33,7 @@ const mapUser = (user: any): User => {
     last_name,
     active: user.active ?? false,
     dui: user.dui || "Sin DUI",
-    role: (user.roles?.[0] as "ROLE_ADMIN" | "ROLE_USER") ?? "ROLE_USER",
+    role: (user.roles?.[0] as "ADMIN" | "USER") ?? "USER",
   };
 };
 

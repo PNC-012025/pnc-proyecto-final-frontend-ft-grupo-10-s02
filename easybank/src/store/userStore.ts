@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useCardStore } from "./useCardStore";
 import { queryClient } from "../main";
 
-type UserRole = "ROLE_USER" | "ROLE_ADMIN";
+type UserRole = "USER" | "ADMIN";
 
 type EasyBankStore = {
   userId: string | null;
@@ -121,7 +121,7 @@ export const useEasyBankStore = create<EasyBankStore>((set, get) => ({
   },
 
   isAdmin: () => {
-    return get().userRoles.includes("ROLE_ADMIN");
+    return get().userRoles.includes("ADMIN");
   },
 
   logout: () => {

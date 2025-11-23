@@ -28,7 +28,7 @@ interface User {
   last_name: string;
   active: boolean;
   dui: string;
-  role: "ROLE_ADMIN" | "ROLE_USER";
+  role: "ADMIN" | "USER";
 }
 
 interface AdminStoreState {
@@ -71,9 +71,9 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
         const last_name = nameParts.slice(-1)[0] || "";
 
         // Normalizar role a los valores esperados
-        const rawRole = user.roles?.[0] ?? "ROLE_USER";
+        const rawRole = user.roles?.[0] ?? "USER";
         const role: User["role"] =
-          rawRole === "ROLE_ADMIN" ? "ROLE_ADMIN" : "ROLE_USER";
+          rawRole === "ADMIN" ? "ADMIN" : "USER";
 
         return {
           id: user.id,
@@ -150,9 +150,9 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
       const first_name = nameParts.slice(0, -1).join(" ") || "Sin nombre";
       const last_name = nameParts.slice(-1)[0] || "";
 
-      const rawRole = user.roles?.[0] ?? "ROLE_USER";
+      const rawRole = user.roles?.[0] ?? "USER";
       const role: User["role"] =
-        rawRole === "ROLE_ADMIN" ? "ROLE_ADMIN" : "ROLE_USER";
+        rawRole === "ADMIN" ? "ADMIN" : "USER";
 
       return {
         id: user.id,
@@ -236,9 +236,9 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
         users: state.users.map((user) =>
           user.id === userId
             ? {
-                ...user,
-                role: role === "ROLE_ADMIN" ? "ROLE_ADMIN" : "ROLE_USER",
-              }
+              ...user,
+              role: role === "ADMIN" ? "ADMIN" : "USER",
+            }
             : user
         ),
         loading: false,
