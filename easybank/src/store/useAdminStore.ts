@@ -57,7 +57,7 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get<ApiResponse<AdminUserApi[]>>(
-        `${API_URL}/admin/userlist`,
+        `${API_URL}/admin/userlist?page=1&size=100`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
