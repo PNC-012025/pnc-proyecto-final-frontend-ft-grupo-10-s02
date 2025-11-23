@@ -24,7 +24,7 @@ export const useExpenseStore = create<ExpenseStore>((set) => ({
         const token = localStorage.getItem("token");
         const config = { headers: { Authorization: `Bearer ${token}` } };
 
-        const res = await axios.get(`${API_BASE}/bill/findown`, config);
+        const res = await axios.get(`${API_BASE}/bill/find?page=0&size=100`, config);
 
         const filtered = Array.isArray(res.data.data)
             ? res.data.data.filter((e: ExpenseType | null) => e !== null)

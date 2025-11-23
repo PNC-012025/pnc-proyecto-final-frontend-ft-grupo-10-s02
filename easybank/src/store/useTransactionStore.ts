@@ -81,7 +81,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
       const token = localStorage.getItem("token");
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
-      const res = await axios.get(`${API_BASE}/transaction/findown`, config);
+      const res = await axios.get(`${API_BASE}/transaction/find?page=0&size=100`, config);
 
       const list = res.data?.data || [];
 
