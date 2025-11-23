@@ -22,7 +22,7 @@ export const useAdminTransStore = create<AdminTransStoreState>((set) => ({
     set({ loading: true, error: null });
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${API_URL}/admin/findall`, {
+      const response = await axios.get(`${API_URL}/admin/transaction`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -49,7 +49,8 @@ export const useAdminTransStore = create<AdminTransStoreState>((set) => ({
     set({ loading: true, error: null });
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${API_URL}/admin/transaction/${id}`, {
+      const response = await axios.get(`${API_URL}/admin/transaction`, {
+        params: { id },
         headers: { Authorization: `Bearer ${token}` },
       });
       set({
