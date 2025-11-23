@@ -1,12 +1,30 @@
 import { useState } from "react";
-import { useTransactions, useTransactionById } from "../../../hooks/useTransactions";
+import { useAdminFindAll, useAdminFindById } from "../../../hooks/useAdminFindAll";
+
+// HARDCODEADO
+type Account = {
+	accountOwner: string;
+	accountNumber: string;
+};
+
+type ApiTx = {
+	transactionId?: string;
+	id?: string;
+	transaction_id?: string;
+	date?: string;
+	amount?: number | string;
+	originAccount?: Account;
+	origin?: Account;
+	destinationAccount?: Account;
+	destination?: Account;
+};
 
 const TransactionSearch = () => {
 	const [searchId, setSearchId] = useState("");
 	const [searchedId, setSearchedId] = useState<string | null>(null);
 
-	const transactionsQuery = useTransactions();
-	const transactionByIdQuery = useTransactionById(searchedId);
+	const transactionsQuery = useAdminFindAll();
+	const transactionByIdQuery = useAdminFindById(searchedId);
 
 	const handleSearch = async () => {
 		const id = searchId.trim();
@@ -69,7 +87,16 @@ const TransactionSearch = () => {
 					);
 				}
 
-				const list = searchedId ? (transactionByIdQuery.data ? [transactionByIdQuery.data] : []) : (transactionsQuery.data ?? []);
+				let list: ApiTx[] = []
+				if (searchedId) {
+					const d = transactionByIdQuery.data
+					if (!d) list = []
+					else if (Array.isArray(d)) list = d
+					else list = [d]
+				} else {
+					list = transactionsQuery.data ?? []
+				}
+
 				if (list.length > 0) {
 					return (
 						<div className="bg-white rounded-xl shadow border border-gray-200 overflow-hidden">
@@ -88,23 +115,29 @@ const TransactionSearch = () => {
 										</tr>
 									</thead>
 									<tbody className="in-admin-us divide-y divide-gray-100 bg-white">
-										{list.map((t) => (
-											<tr key={t.transactionId} className="hover:bg-blue-50 transition">
-												<td className="px-6 py-4 font-mono text-gray-700">{t.transactionId.slice(0, 8)}...</td>
-												<td className="px-6 py-4">
-													<span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-														${Number(t.amount).toFixed(2)}
-													</span>
-												</td>
-												<td className="px-6 py-4 text-gray-600">
-													{t.date ? new Date(t.date).toLocaleString() : ""}
-												</td>
-												<td className="in-admin-us px-6 py-4 text-gray-600">{t.originAccount.accountNumber}</td>
-												<td className="in-admin-us px-6 py-4 text-gray-600">{t.originAccount.accountOwner}</td>
-												<td className="in-admin-us px-6 py-4 text-gray-600">{t.destinationAccount.accountNumber}</td>
-												<td className="in-admin-us px-6 py-4 text-gray-600">{t.destinationAccount.accountOwner}</td>
-											</tr>
-										))}
+										{list.map((t: ApiTx) => {
+											// soportar diferentes shapes devueltos por la API
+											const txId = t.transactionId ?? t.id ?? t.transaction_id ?? ""
+											const amount = Number(t.amount ?? 0)
+											const origin: Account = t.originAccount ?? t.origin ?? { accountNumber: "", accountOwner: "" }
+											const dest: Account = t.destinationAccount ?? t.destination ?? { accountNumber: "", accountOwner: "" }
+
+											return (
+												<tr key={txId || Math.random()} className="hover:bg-blue-50 transition">
+													<td className="px-6 py-4 font-mono text-gray-700">{(txId || "").slice(0, 8)}{txId ? '...' : ''}</td>
+													<td className="px-6 py-4">
+														<span className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+															${amount.toFixed(2)}
+														</span>
+													</td>
+													<td className="px-6 py-4 text-gray-600">{t.date ? new Date(t.date).toLocaleString() : ""}</td>
+													<td className="in-admin-us px-6 py-4 text-gray-600">{origin.accountNumber}</td>
+													<td className="in-admin-us px-6 py-4 text-gray-600">{origin.accountOwner}</td>
+													<td className="in-admin-us px-6 py-4 text-gray-600">{dest.accountNumber}</td>
+													<td className="in-admin-us px-6 py-4 text-gray-600">{dest.accountOwner}</td>
+												</tr>
+											)
+										})}
 									</tbody>
 								</table>
 							</div>

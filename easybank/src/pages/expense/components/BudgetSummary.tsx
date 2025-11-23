@@ -16,7 +16,10 @@ export default function BudgetSummary() {
 
     const budget = cardDetails?.balance ?? 0;
 
-    const totalSpent = expenses.reduce((sum, item) => sum + item.amount, 0);
+    const totalSpent = (expenses ?? []).reduce(
+        (sum, item) => sum + (item?.amount ?? 0),
+        0
+    );
 
     const remaining = budget - totalSpent;
 

@@ -114,11 +114,11 @@ const ClientTable = () => {
       selector: (row: User) => row.role,
       cell: (row) => (
         <span
-          className={`px-3 py-1 rounded-full text-xs font-medium ${row.role === "ROLE_ADMIN"
+          className={`px-3 py-1 rounded-full text-xs font-medium ${row.role === "ADMIN"
             ? "bg-purple-100 text-purple-800"
             : "bg-blue-100 text-blue-800"
             }`}>
-          {row.role === "ROLE_ADMIN" ? "Administrador" : "Cliente"}
+          {row.role === "ADMIN" ? "Administrador" : "Cliente"}
         </span>
       ),
     },
@@ -211,7 +211,7 @@ const ClientTable = () => {
                   isOpen={showRolePopup}
                   onClose={() => setShowRolePopup(false)}
                   onConfirm={async () => {
-                    const newRole = selectedUser.role === "ROLE_ADMIN" ? "ROLE_USER" : "ROLE_ADMIN";
+                    const newRole = selectedUser.role === "ADMIN" ? "USER" : "ADMIN";
                     try {
                       await updateRoleMutation.mutateAsync({ id: selectedUser.id, role: newRole });
                     } catch (error) {
@@ -220,15 +220,15 @@ const ClientTable = () => {
                     setShowRolePopup(false);
                   }}
                   userName={selectedUser.name}
-                  currentRole={selectedUser.role === "ROLE_ADMIN" ? "Administrador" : "Usuario"}
-                  newRole={selectedUser.role === "ROLE_ADMIN" ? "Usuario" : "Administrador"}
+                  currentRole={selectedUser.role === "ADMIN" ? "Administrador" : "Usuario"}
+                  newRole={selectedUser.role === "ADMIN" ? "Usuario" : "Administrador"}
                 />
               )}
             </>
           }
           {/* Eliminar usuario */}
           {
-            row.role !== "ROLE_ADMIN" && (
+            row.role !== "ADMIN" && (
               <>
                 <button
                   className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition"
