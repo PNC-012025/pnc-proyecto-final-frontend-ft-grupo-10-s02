@@ -9,7 +9,6 @@ export const useTransitions = () => {
   const transitionsQuery = useQuery({
     queryKey: ["transitions"],
     queryFn: fetchTransactions,
-    staleTime: 1000 * 60 * 5,
     enabled: !!token, // only run when token is available
     retry: false,
   });
