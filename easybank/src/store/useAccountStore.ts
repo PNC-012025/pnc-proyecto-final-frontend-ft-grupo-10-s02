@@ -22,7 +22,7 @@ export const useAccountStore = create<AccountStoreState>((set) => ({
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `${API_URL}/admin/userlist/${userId}/accounts`,
+        `${API_URL}/admin/userlist/${userId}/account`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

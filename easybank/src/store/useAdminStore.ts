@@ -72,8 +72,7 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
 
         // Normalizar role a los valores esperados
         const rawRole = user.roles?.[0] ?? "USER";
-        const role: User["role"] =
-          rawRole === "ADMIN" ? "ADMIN" : "USER";
+        const role: User["role"] = rawRole === "ADMIN" ? "ADMIN" : "USER";
 
         return {
           id: user.id,
@@ -151,8 +150,7 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
       const last_name = nameParts.slice(-1)[0] || "";
 
       const rawRole = user.roles?.[0] ?? "USER";
-      const role: User["role"] =
-        rawRole === "ADMIN" ? "ADMIN" : "USER";
+      const role: User["role"] = rawRole === "ADMIN" ? "ADMIN" : "USER";
 
       return {
         id: user.id,
@@ -200,7 +198,7 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get<ApiResponse<AccountResponseAdmin[]>>(
-        `${API_URL}/admin/userlist/${userId}/accounts`,
+        `${API_URL}/admin/userlist/${userId}/account`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       set({ loading: false });
@@ -236,9 +234,9 @@ export const useAdminStore = create<AdminStoreState>((set, get) => ({
         users: state.users.map((user) =>
           user.id === userId
             ? {
-              ...user,
-              role: role === "ADMIN" ? "ADMIN" : "USER",
-            }
+                ...user,
+                role: role === "ADMIN" ? "ADMIN" : "USER",
+              }
             : user
         ),
         loading: false,
