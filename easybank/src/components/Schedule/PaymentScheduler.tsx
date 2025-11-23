@@ -26,10 +26,7 @@ const categorias = ["Servicios", "Deudas", "Suscripciones", "Inversión", "Otro"
 
 export function PaymentScheduler() {
 
-    const userId = useEasyBankStore((state) => state.userId);
-
-    console.log(userId);
-
+    const token = useEasyBankStore((state) => state.token);
 
     const [mes, setMes] = useState(new Date(2024, 10))
     const [pagos, setPagos] = useState<ScheduledPayment[]>([])
@@ -190,22 +187,25 @@ export function PaymentScheduler() {
         })
         .reduce((sum, p) => sum + p.monto, 0)
 
+    useEffect(() => {
+        if (!token) return;
+
+        const saved = localStorage.getItem(`pagos_${token}`);
+        if (saved) {
+            try {
+                setPagos(JSON.parse(saved));
+            } catch (e) {
+                console.error("Error al parsear pagos del localStorage", e);
+                setPagos([]);
+            }
+        }
+    }, [token]);
+
 
     useEffect(() => {
-        if (!userId) return;
-
-        const saved = localStorage.getItem(`pagos_${userId}`);
-        if (saved) setPagos(JSON.parse(saved));
-        console.log(userId);
-
-    }, [userId]);
-
-    useEffect(() => {
-        if (!userId) return;
-
-        localStorage.setItem(`pagos_${userId}`, JSON.stringify(pagos));
-    }, [pagos, userId]);
-
+        if (!token) return;
+        localStorage.setItem(`pagos_${token}`, JSON.stringify(pagos));
+    }, [pagos, token]);
 
     return (
         <>
